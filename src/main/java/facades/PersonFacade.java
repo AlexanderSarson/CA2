@@ -46,7 +46,9 @@ public class PersonFacade {
     public PersonDTO getByEmail(String email) throws PersonNotFoundException {
         EntityManager entityManager = getEntityManager();
         try {
-            Person person = entityManager.createNamedQuery("Person.getByEmail", Person.class).setParameter("email", email).getSingleResult();
+            Person person = entityManager.createNamedQuery("Person.getByEmail", Person.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
             return new PersonDTO(person);
         } catch (NoResultException e) {
             throw new PersonNotFoundException();
@@ -63,7 +65,8 @@ public class PersonFacade {
     public List<PersonDTO> getAll() {
         EntityManager entityManager = getEntityManager();
         try {
-            List<Person> persons = entityManager.createNamedQuery("Person.getAll",Person.class).getResultList();
+            List<Person> persons = entityManager.createNamedQuery("Person.getAll",Person.class)
+                    .getResultList();
             return toPersonDTOList(persons);
         } finally {
             entityManager.close();
@@ -103,13 +106,30 @@ public class PersonFacade {
             em.persist(result);
             em.getTransaction().commit();
         } catch (Exception e) {
-            throw new MissingInputException(MissingInputException.DEFAUL_PERSON_MESSAGE);
+            throw new MissingInputException(MissingInputException.DEFAULT_PERSON_MESSAGE);
         } finally {
             em.close();
         }
         return new PersonDTO(result);
     }
 
+    public int deletePerson(int id) throws PersonNotFoundException {
+        EntityManager entityManager = getEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            int rows = entityManager.createNamedQuery("Person.deletePerson")
+                    .setParameter("id", id)
+                    .executeUpdate();
+            entityManager.getTransaction().commit();
+            if(rows < 1) {
+                // Nothing was deleted - handle as an error!
+                throw new PersonNotFoundException();
+            }
+            return rows;
+        } finally {
+            entityManager.close();
+        }
+    }
 
     /**
      * Generates a list of PersonDTOs from a list of Persons

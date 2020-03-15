@@ -5,8 +5,12 @@
  */
 package dto;
 
+import entities.Hobby;
 import entities.Person;
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -23,6 +27,8 @@ public class PersonDTO {
     @Schema(required = true, example = "Jensen")
     private String lastName;
 
+    private List<Hobby> hobbies = new ArrayList<>();
+
     public PersonDTO(int id, String email, String firstName, String lastName) {
         this.id = id;
         this.email = email;
@@ -35,6 +41,7 @@ public class PersonDTO {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.email = person.getEmail();
+        this.hobbies = person.getHobbies();
     }
 
     public int getId() {
@@ -67,6 +74,14 @@ public class PersonDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public List<Hobby> getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
     }
 
     @Override

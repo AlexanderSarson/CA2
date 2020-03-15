@@ -9,6 +9,7 @@ import dto.PersonDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Named;
 import javax.persistence.*;
 
 
@@ -18,7 +19,8 @@ import javax.persistence.*;
 @NamedQueries({
     @NamedQuery(name = "Person.deleteAllRows", query = "DELETE FROM Person"),
     @NamedQuery(name = "Person.getAll", query = "SELECT p FROM Person p"),
-    @NamedQuery(name = "Person.getByEmail", query = "SELECT p FROM Person p WHERE p.email = :email")
+    @NamedQuery(name = "Person.getByEmail", query = "SELECT p FROM Person p WHERE p.email = :email"),
+    @NamedQuery(name = "Person.deletePerson", query = "DELETE FROM Person p WHERE p.id = :id")
 })
 public class Person implements Serializable {
 
@@ -32,6 +34,15 @@ public class Person implements Serializable {
     private String lastName;
     @Column(unique = true, nullable = false)
     private String email;
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable(
+            name = "PersonHobby",
+            joinColumns =  {@JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "HOBBY_ID", referencedColumnName = "ID")}
+    )
+    List<Hobby> hobbies = new ArrayList<>();
+
 
     public Person() {
     }
@@ -47,6 +58,7 @@ public class Person implements Serializable {
         this.firstName = dto.getFirstName();
         this.lastName = dto.getLastName();
         this.email = dto.getEmail();
+        this.setHobbies(dto.getHobbies());
     }
 
     public int getId() {
@@ -80,4 +92,11 @@ public class Person implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void addHobby(Hobby hobby) {
+        hobbies.add(hobby);
+    }
+    public List<Hobby> getHobbies() { return hobbies; }
+
+    private void setHobbies(List<Hobby> hobbies) { this.hobbies = hobbies; }
 }
