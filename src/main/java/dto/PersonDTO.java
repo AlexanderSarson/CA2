@@ -5,6 +5,7 @@
  */
 package dto;
 
+import entities.Person;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -27,6 +28,13 @@ public class PersonDTO {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public PersonDTO(Person person) {
+        this.id = person.getId();
+        this.firstName = person.getFirstName();
+        this.lastName = person.getLastName();
+        this.email = person.getEmail();
     }
 
     public int getId() {
@@ -60,7 +68,17 @@ public class PersonDTO {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
-    
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        }
+        if(obj.getClass() != this.getClass()) {
+            return false;
+        } else {
+            PersonDTO other = (PersonDTO)obj;
+            return this.id == other.getId();
+        }
+    }
 }
