@@ -35,7 +35,7 @@ public class Person implements Serializable {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "PersonHobby",
             joinColumns =  {@JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")},
@@ -43,6 +43,8 @@ public class Person implements Serializable {
     )
     List<Hobby> hobbies = new ArrayList<>();
 
+    @OneToMany(mappedBy = "owner")
+    List<Phone> phones = new ArrayList<>();
 
     public Person() {
     }
@@ -58,7 +60,8 @@ public class Person implements Serializable {
         this.firstName = dto.getFirstName();
         this.lastName = dto.getLastName();
         this.email = dto.getEmail();
-        this.setHobbies(dto.getHobbies());
+        this.hobbies = dto.getHobbies();
+        this.phones = dto.getPhones();
     }
 
     public int getId() {
@@ -96,7 +99,14 @@ public class Person implements Serializable {
     public void addHobby(Hobby hobby) {
         hobbies.add(hobby);
     }
+
     public List<Hobby> getHobbies() { return hobbies; }
 
-    private void setHobbies(List<Hobby> hobbies) { this.hobbies = hobbies; }
+    public void addPhone(Phone phone) {
+        // NOTE(Benjamin): Adding the bi-directional relation here! - and not in method phone.setOwner()
+        phone.setOwner(this);
+        phones.add(phone);
+    }
+
+    public List<Phone> getPhones() { return phones; }
 }

@@ -7,6 +7,7 @@ package dto;
 
 import entities.Hobby;
 import entities.Person;
+import entities.Phone;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class PersonDTO {
     private String lastName;
 
     private List<Hobby> hobbies = new ArrayList<>();
+    private List<Phone> phones = new ArrayList<>();
 
     public PersonDTO(int id, String email, String firstName, String lastName) {
         this.id = id;
@@ -42,6 +44,7 @@ public class PersonDTO {
         this.lastName = person.getLastName();
         this.email = person.getEmail();
         this.hobbies = person.getHobbies();
+        this.phones = person.getPhones();
     }
 
     public int getId() {
@@ -82,6 +85,14 @@ public class PersonDTO {
 
     public void setHobbies(List<Hobby> hobbies) {
         this.hobbies = hobbies;
+    }
+
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
     @Override

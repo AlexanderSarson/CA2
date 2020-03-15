@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HobbyFacadeTest {
 
-    private static EntityManagerFactory emf;
+    private static EntityManagerFactory entityManagerFactory;
     private static HobbyFacade hobbyFacade;
     private static Hobby h1, h2;
     public HobbyFacadeTest() {
@@ -33,23 +33,23 @@ public class HobbyFacadeTest {
 
     @BeforeAll
     public static void setUpClass() {
-        emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
-        hobbyFacade = HobbyFacade.getHobbyFacade(emf);
+        entityManagerFactory = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
+        hobbyFacade = HobbyFacade.getHobbyFacade(entityManagerFactory);
         h1 = new Hobby("Chess", "What we do is just play chess");
         h2 = new Hobby("Chess-boxing", "Yes it is what it sounds like");
     }
 
     @BeforeEach
     public void setUp() {
-        EntityManager em = emf.createEntityManager();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            em.getTransaction().begin();
-            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
-            em.persist(h1);
-            em.persist(h2);
-            em.getTransaction().commit();
+            entityManager.getTransaction().begin();
+            entityManager.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
+            entityManager.persist(h1);
+            entityManager.persist(h2);
+            entityManager.getTransaction().commit();
         } finally {
-            em.close();
+            entityManager.close();
         }
     }
 

@@ -16,25 +16,25 @@ import javax.persistence.*;
 
 public class PersonFacade {
     private static PersonFacade instance;
-    private static EntityManagerFactory emf;
+    private static EntityManagerFactory entityManagerFactory;
 
     private PersonFacade() {
     }
 
     /**
-     * @param _emf
+     * @param entityManagerFactory
      * @return an instance of this facade class.
      */
-    public static PersonFacade getPersonFacade(EntityManagerFactory _emf) {
+    public static PersonFacade getPersonFacade(EntityManagerFactory entityManagerFactory) {
         if (instance == null) {
-            emf = _emf;
+            PersonFacade.entityManagerFactory = entityManagerFactory;
             instance = new PersonFacade();
         }
         return instance;
     }
 
     private EntityManager getEntityManager() {
-        return emf.createEntityManager();
+        return entityManagerFactory.createEntityManager();
     }
 
     /**
@@ -99,7 +99,7 @@ public class PersonFacade {
      * @return The persisted person, but with its ID assigned.
      */
     public PersonDTO create(PersonDTO person) throws MissingInputException {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = entityManagerFactory.createEntityManager();
         Person result = new Person(person);
         try {
             em.getTransaction().begin();
@@ -143,4 +143,6 @@ public class PersonFacade {
         });
         return dtos;
     }
+
+    // TODO(Benjamin): UPDATE Person
 }

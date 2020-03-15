@@ -25,33 +25,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class PersonFacadeTest {
-    // This value must be one more than the  number of persons created in the setup method.
-    private static EntityManagerFactory emf;
+    private static EntityManagerFactory entityManagerFactory;
     private static PersonFacade personFacade;
     private static Person p1, p2;
 
     public PersonFacadeTest() {}
     @BeforeAll
     public static void setUpClass() {
-        emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
-        personFacade = PersonFacade.getPersonFacade(emf);
+        entityManagerFactory = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
+        personFacade = PersonFacade.getPersonFacade(entityManagerFactory);
         p1 = new Person("Peter", "Pan", "peterPan@gmail.com");
         p2 = new Person("Lars", "Larsen", "larsLarsen@gmail.com");
     }
     @BeforeEach
     public void setUp() {
-        EntityManager em = emf.createEntityManager();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            em.getTransaction().begin();
-            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
-            em.persist(p1);
-            em.persist(p2);
-            em.getTransaction().commit();
+            entityManager.getTransaction().begin();
+            entityManager.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            entityManager.persist(p1);
+            entityManager.persist(p2);
+            entityManager.getTransaction().commit();
         } finally {
-            em.close();
+            entityManager.close();
         }
     }
-
 
     @Test public void testGetAll() {
         List<PersonDTO> dtos = personFacade.getAll();
