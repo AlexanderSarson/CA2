@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dat.sem3.oas</groupId>
-    <artifactId>startcodeOas</artifactId>
+    <artifactId>CA2</artifactId>
     <version>1.0.1</version>
     <packaging>war</packaging>
 
-    <name>startcodeOas</name>
+    <name>CA2</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
