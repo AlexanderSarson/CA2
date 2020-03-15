@@ -40,10 +40,13 @@ public class Person implements Serializable {
             joinColumns =  {@JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "HOBBY_ID", referencedColumnName = "ID")}
     )
-    List<Hobby> hobbies = new ArrayList<>();
+    private List<Hobby> hobbies = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
-    List<Phone> phones = new ArrayList<>();
+    private List<Phone> phones = new ArrayList<>();
+
+    @ManyToOne
+    private Address address;
 
     public Person() {
     }
@@ -61,6 +64,7 @@ public class Person implements Serializable {
         this.email = dto.getEmail();
         this.hobbies = dto.getHobbies();
         this.phones = dto.getPhones();
+        this.address = dto.getAddress();
     }
 
     public int getId() {
@@ -93,6 +97,15 @@ public class Person implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+        address.addPerson(this);
     }
 
     public void addHobby(Hobby hobby) {

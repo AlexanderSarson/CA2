@@ -5,6 +5,7 @@
  */
 package dto;
 
+import entities.Address;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
@@ -30,6 +31,7 @@ public class PersonDTO {
 
     private List<Hobby> hobbies = new ArrayList<>();
     private List<Phone> phones = new ArrayList<>();
+    private Address address;
 
     public PersonDTO(int id, String email, String firstName, String lastName) {
         this.id = id;
@@ -45,6 +47,7 @@ public class PersonDTO {
         this.email = person.getEmail();
         this.hobbies = person.getHobbies();
         this.phones = person.getPhones();
+        this.address = person.getAddress();
     }
 
     public int getId() {
@@ -106,5 +109,9 @@ public class PersonDTO {
             PersonDTO other = (PersonDTO)obj;
             return this.id == other.getId();
         }
+    }
+
+    public Address getAddress() {
+        return address;
     }
 }

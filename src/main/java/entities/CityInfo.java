@@ -5,6 +5,8 @@ package entities;
  */
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Named;
 import javax.persistence.*;
 
@@ -27,6 +29,9 @@ public class CityInfo implements Serializable {
     private int zipCode;
     @Column(nullable = false)
     private String city;
+
+    @OneToMany(mappedBy = "cityInfo", cascade = CascadeType.PERSIST)
+    private List<Address> addresses = new ArrayList<>();
 
     public CityInfo() {
     }
@@ -58,6 +63,20 @@ public class CityInfo implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public void addAddress(Address address) {
+        if(!addresses.contains(address)) {
+            addresses.add(address);
+        }
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
     @Override
