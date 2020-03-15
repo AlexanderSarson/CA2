@@ -15,7 +15,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Person")
-@NamedNativeQuery(name = "Person.truncate", query = "TRUNCATE TABLE Person")
 @NamedQueries({
     @NamedQuery(name = "Person.deleteAllRows", query = "DELETE FROM Person"),
     @NamedQuery(name = "Person.getAll", query = "SELECT p FROM Person p"),
@@ -43,7 +42,7 @@ public class Person implements Serializable {
     )
     List<Hobby> hobbies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
     List<Phone> phones = new ArrayList<>();
 
     public Person() {
