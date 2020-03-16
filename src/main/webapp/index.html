@@ -8,20 +8,95 @@
         <h2>Start Code for JPA and JAX-RS projects with support for OpenAPI Documentation</h2>
         <div>
             <a href="openapi">API-Documentation</a>
-            <p>Observe that the link above does NOT (yet) document your code, but the (in)famous Pet-store</p>
-            <p>In your browser test these two endpoints:</p>
+            
+            <h1>Scrum Plan</h1>
+            <div>
+                <h2>Sprint 1</h2>
+                <ul>
+                    <li>
+                        The API description must be almost complete and available as a page on your deployed
+                        project.
+                        <ul>
+                            <li>
+                                The base skeleton of the API description
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        The Scrum Plan for this, and the coming sprints.
+                        <ul>
+                            <li>
+                                As a page on the deployed project.
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        The Travis build-pipeline must be setup.
+                    </li>
+
+                    <li>
+                        The base entities and their relations, as well as their facades, must be implemented.
+                        <ul>
+                            <li>
+                                Using TDD.
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        Setup OpenAPI skeleton
+                    </li>
+                </ul>
+            </div>
+
+            <h2>Sprint 2</h2>
             <ul>
-                <li><code>/api/openapi.json</code></li>
-                <li><code>/api/openapi.yaml</code></li>
+                <li>
+                    More advanced entities + relations + facades should be completed
+                    <ul>
+                        <li>
+                            Using TDD.
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    Sample data should be available in the dev-database.
+                    <ul>
+                        <li>
+                            Using a base Tester class
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    Some of the endpoints (GET, POST and PUT) must be ready with the corresponding DTOs
+                    and integration tests
+                </li>
             </ul>
-            <p>What is returned by these two endpoints (MIME type, and what does the content represent) </p>
-            <h4>TODO:</h4>
+
+            <h2>Sprint 2</h2>
             <ul>
-                <li>Open the file <em>index.html</em> in the folder <em>openapi</em></li>
-                <li>Locate the URL that points to the external petstore-API and replace with a (relative) link to one of the two endpoints given above</li>
-                <li>Refresh your browser (CTRL-F5) and click the link to the <em>API-Documentation</em> again</li>
-                <li>Verify that you get documentation for your own end-points</li>
+                <li>
+                    API must be fully implemented
+                </li>
+
+                <li>
+                    Implement a SPA which as a minimum must have the ability to use some of your GET
+                    endpoints and at least one POST endpoint.
+                    <ul>
+                        <li>Get all persons with a given hobby</li>
+                        <li>Get all persons living in, a given city (I.e. 2800 Lyngby)</li>
+                        <li>Get the count of people with a given hobby</li>
+                        <li>Get a list of all zip codes in Denmark</li>
+                        <li>Get a list of companies with more than x employees</li>
+                        <li>Create a person, with hobbies, phone, address, etz.</li>
+                    </ul>
+                </li>
             </ul>
+
         </div>
     </body>
 </html>
