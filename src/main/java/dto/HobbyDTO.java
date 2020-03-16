@@ -1,12 +1,9 @@
 package dto;
 
 import entities.Hobby;
-import entities.Person;
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.util.ArrayList;
 import java.util.List;
-import rest.deserializationsettings.Exclude;
 
 @Schema(name = "HobbyDTO")
 public class HobbyDTO {
@@ -53,6 +50,18 @@ public class HobbyDTO {
         this.description = description;
     }
 
+    public static List<HobbyDTO> convertToHobbyDTO(List<Hobby> hobbies){
+        List<HobbyDTO> hobbyDTOList = new ArrayList<>();
+        hobbies.forEach(hobby -> hobbyDTOList.add(new HobbyDTO(hobby)));
+        return hobbyDTOList;
+    }
+    
+    public static List<Hobby> convertToHobby(List<HobbyDTO> hobbiesDTO){
+        List<Hobby> hobbyList = new ArrayList<>();
+        hobbiesDTO.forEach(hobbyDTO -> hobbyList.add(new Hobby(hobbyDTO)));
+        return hobbyList;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if(obj == null) return false;

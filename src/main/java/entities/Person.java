@@ -1,16 +1,18 @@
 package entities;
+
 /*
  * author paepke
  * version 1.0
  */
 
+import dto.HobbyDTO;
 import dto.PersonDTO;
+import dto.PhoneDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-
 
 @Entity
 @Table(name = "Person")
@@ -36,8 +38,10 @@ public class Person implements Serializable {
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "PersonHobby",
-            joinColumns =  {@JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "HOBBY_ID", referencedColumnName = "ID")}
+            joinColumns = {
+                @JoinColumn(name = "PERSON_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "HOBBY_ID", referencedColumnName = "ID")}
     )
     private List<Hobby> hobbies = new ArrayList<>();
 
@@ -61,9 +65,11 @@ public class Person implements Serializable {
         this.firstName = dto.getFirstName();
         this.lastName = dto.getLastName();
         this.email = dto.getEmail();
-        this.hobbies = dto.getHobbies();
-        this.phones = dto.getPhones();
-        this.address = dto.getAddress();
+        this.hobbies = HobbyDTO.convertToHobby(dto.getHobbies());
+        this.phones = PhoneDTO.convertToPhone(dto.getPhones());
+        if (dto.getAddress() != null) {
+            this.address = new Address(dto.getAddress());
+        }
     }
 
     public Integer getId() {
@@ -109,29 +115,38 @@ public class Person implements Serializable {
 
     public void addHobby(Hobby hobby) {
         hobby.addPerson(this);
-        if(!hobbies.contains(hobby)) {
+        if (!hobbies.contains(hobby)) {
             hobbies.add(hobby);
         }
     }
 
-    public List<Hobby> getHobbies() { return hobbies; }
+    public List<Hobby> getHobbies() {
+        return hobbies;
+    }
 
     public void addPhone(Phone phone) {
         phone.setOwner(this);
-        if(!phones.contains(phone)) {
+        if (!phones.contains(phone)) {
             phones.add(phone);
         }
     }
 
-    public List<Phone> getPhones() { return phones; }
+    public List<Phone> getPhones() {
+        return phones;
+    }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null) return false;
-        if(obj.getClass() != this.getClass()) return false;
-        else {
-            Person other = (Person)obj;
-            if(this.id == null || other.getId() == null) return false;
+        if (obj == null) {
+            return false;
+        }
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        } else {
+            Person other = (Person) obj;
+            if (this.id == null || other.getId() == null) {
+                return false;
+            }
             return other.getId().equals(this.id);
         }
     }

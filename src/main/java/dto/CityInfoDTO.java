@@ -1,11 +1,7 @@
 package dto;
 
-import entities.Address;
 import entities.CityInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Schema(name = "CityInfoDTO")
 public class CityInfoDTO {

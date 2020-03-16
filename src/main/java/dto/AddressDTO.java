@@ -2,11 +2,7 @@ package dto;
 
 import entities.Address;
 import entities.CityInfo;
-import entities.Person;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author paepke
@@ -21,7 +17,7 @@ public class AddressDTO {
     @Schema(example = "The street along side the train station")
     private String additionalInfo;
 
-    private CityInfo cityInfo;
+    private CityInfoDTO cityInfo;
 
     public AddressDTO(int id, String street, String additionalInfo) {
         this.id = id;
@@ -33,7 +29,9 @@ public class AddressDTO {
         this.id = address.getId();
         this.street = address.getStreet();
         this.additionalInfo = address.getAdditionalInfoInfo();
-        this.cityInfo = address.getCityInfo();
+        if(address.getCityInfo() != null){
+            this.cityInfo = new CityInfoDTO(address.getCityInfo());
+        }
     }
 
     public Integer getId() {
@@ -60,13 +58,14 @@ public class AddressDTO {
         this.additionalInfo = additionalInfo;
     }
 
-    public CityInfo getCityInfo() {
+    public CityInfoDTO getCityInfo() {
         return cityInfo;
     }
 
-    public void setCityInfo(CityInfo cityInfo) {
+    public void setCityInfo(CityInfoDTO cityInfo) {
         this.cityInfo = cityInfo;
     }
+
 
     @Override
     public boolean equals(Object obj) {
