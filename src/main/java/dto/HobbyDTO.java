@@ -14,6 +14,9 @@ public class HobbyDTO {
     @Schema(example = "All we do is play chess")
     private String description;
 
+    public HobbyDTO() {
+    }
+
     public HobbyDTO(Integer id, String name, String description) {
         this.id = id;
         this.name = name;

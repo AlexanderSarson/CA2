@@ -14,6 +14,9 @@ public class PhoneDTO {
     @Schema(example = "Work")
     private String description;
 
+    public PhoneDTO() {
+    }
+
     public PhoneDTO(Integer id, String number, String description) {
         this.id = id;
         this.number = number;

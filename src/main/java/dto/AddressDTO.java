@@ -19,6 +19,9 @@ public class AddressDTO {
 
     private CityInfoDTO cityInfo;
 
+    public AddressDTO() {
+    }
+
     public AddressDTO(int id, String street, String additionalInfo) {
         this.id = id;
         this.street = street;
@@ -33,7 +36,7 @@ public class AddressDTO {
             this.cityInfo = new CityInfoDTO(address.getCityInfo());
         }
     }
-
+ 
     public Integer getId() {
         return id;
     }

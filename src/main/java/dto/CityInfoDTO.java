@@ -12,6 +12,9 @@ public class CityInfoDTO {
     @Schema(required = true, example = "Lyngby")
     private String city;
 
+    public CityInfoDTO() {
+    }
+
     public CityInfoDTO(Integer id, Integer zipCode, String city) {
         this.id = id;
         this.zipCode = zipCode;

@@ -31,6 +31,9 @@ public class PersonDTO {
     private List<PhoneDTO> phones = new ArrayList<>();
     private AddressDTO address;
 
+    public PersonDTO() {
+    }
+
     public PersonDTO(int id, String email, String firstName, String lastName) {
         this.id = id;
         this.email = email;
