@@ -4,6 +4,7 @@ package facades;
  * version 1.0
  */
 
+import dto.AddressDTO;
 import dto.PersonDTO;
 import entities.Address;
 import entities.Person;
@@ -61,14 +62,14 @@ public class AddressFacadeTest {
     }
 
     @Test public void testGetAll() {
-        List<Address> addresses = addressFacade.getAll();
-        assertTrue(addresses.contains(a1));
-        assertTrue(addresses.contains(a2));
+        List<AddressDTO> addresses = addressFacade.getAll();
+        assertTrue(addresses.contains(new AddressDTO(a1)));
+        assertTrue(addresses.contains(new AddressDTO(a2)));
     }
     @Test public void testGetById_with_valid_id() throws AddressNotFoundException {
-        int id = a1.getId();
-        Address result = addressFacade.getById(id);
-        assertEquals(a1, result);
+        Integer id = a1.getId();
+        AddressDTO result = addressFacade.getById(id);
+        assertEquals(new AddressDTO(a1), result);
     }
     @Test public void testGetById_with_invalid_id() {
         int id = 1000;
@@ -78,25 +79,25 @@ public class AddressFacadeTest {
     }
     @Test public void testGetByStreet_with_valid_street() {
         String street = a1.getStreet();
-        List<Address> addresses = addressFacade.getByStreet(street);
+        List<AddressDTO> addresses = addressFacade.getByStreet(street);
         assertEquals(1, addresses.size());
-        assertTrue(addresses.contains(a1));
+        assertTrue(addresses.contains(new AddressDTO(a1)));
     }
     @Test public void testGetByStreet_with_invalid_street() {
         String street = "";
-        List<Address> addresses = addressFacade.getByStreet(street);
+        List<AddressDTO> addresses = addressFacade.getByStreet(street);
         assertEquals(0, addresses.size());
     }
     @Test public void testCreateAddress_with_valid_input() throws MissingInputException {
         Address a3 = new Address("New Street", "This is a new Address");
-        int nextId = Math.max(a1.getId(), a2.getId()) + 1;
-        addressFacade.create(a3);
-        assertEquals(nextId, a3.getId());
+        Integer nextId = Math.max(a1.getId(), a2.getId()) + 1;
+        AddressDTO result = addressFacade.create(new AddressDTO(a3));
+        assertEquals(nextId, result.getId());
     }
     @Test public void testCreateAddress_with_missing_street() {
         Address a3 = new Address(null, "this is just fluff");
         assertThrows(MissingInputException.class, () -> {
-            addressFacade.create(a3);
+            addressFacade.create(new AddressDTO(a3));
         });
     }
 }

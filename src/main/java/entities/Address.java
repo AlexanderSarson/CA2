@@ -4,6 +4,8 @@ package entities;
  * version 1.0
  */
 
+import dto.AddressDTO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,14 @@ public class Address implements Serializable {
         this.additionalInfo = additionalInfo;
     }
 
+    public Address(AddressDTO addressDTO) {
+        this.id = addressDTO.getId();
+        this.street = addressDTO.getStreet();
+        this.additionalInfo = addressDTO.getAdditionalInfo();
+        this.cityInfo = addressDTO.getCityInfo();
+        this.persons = addressDTO.getPersons();
+    }
+
     public int getId() {
         return id;
     }
@@ -77,6 +87,10 @@ public class Address implements Serializable {
 
     public void addPerson(Person person) {
         persons.add(person);
+    }
+
+    public List<Person> getPersons() {
+        return persons;
     }
 
     @Override

@@ -4,10 +4,12 @@ package facades;
  * version 1.0
  */
 
+import dto.HobbyDTO;
 import entities.Hobby;
 import exception.HobbyNotFoundException;
 import exception.MissingInputException;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -36,12 +38,20 @@ public class HobbyFacade {
         return emf.createEntityManager();
     }
 
-    public List<Hobby> getAll() {
+    private List<HobbyDTO> toHobbyDTOList(List<Hobby> hobbies) {
+        List<HobbyDTO> dtos = new ArrayList<>();
+        hobbies.forEach(hobby -> {
+            dtos.add(new HobbyDTO(hobby));
+        });
+        return dtos;
+    }
+
+    public List<HobbyDTO> getAll() {
         EntityManager entityManager = getEntityManager();
         try {
             List<Hobby> hobbies = entityManager.createNamedQuery("Hobby.getAll", Hobby.class)
                     .getResultList();
-            return hobbies;
+            return toHobbyDTOList(hobbies);
         } finally {
             entityManager.close();
         }
@@ -52,13 +62,13 @@ public class HobbyFacade {
      * @param name the name of the hobbies to search for.
      * @return a list of hobbies corresponding to the given name.
      */
-    public Hobby getByName(String name) throws HobbyNotFoundException {
+    public HobbyDTO getByName(String name) throws HobbyNotFoundException {
         EntityManager entityManager = getEntityManager();
         try {
             Hobby hobby = entityManager.createNamedQuery("Hobby.findByName", Hobby.class)
                     .setParameter("name", name)
                     .getSingleResult();
-            return hobby;
+            return new HobbyDTO(hobby);
         } catch (NoResultException e) {
             throw new HobbyNotFoundException();
         } finally {
@@ -72,14 +82,14 @@ public class HobbyFacade {
      * @return The found hobby.
      * @exception HobbyNotFoundException if no hobby was found corresponding the given ID.
      */
-    public Hobby getById(int id) throws HobbyNotFoundException {
+    public HobbyDTO getById(int id) throws HobbyNotFoundException {
         EntityManager entityManager = getEntityManager();
         try {
             Hobby hobby = entityManager.find(Hobby.class, id);
             if(hobby == null) {
                 throw new HobbyNotFoundException();
             } else {
-                return hobby;
+                return new HobbyDTO(hobby);
             }
         } finally {
             entityManager.close();
@@ -88,11 +98,12 @@ public class HobbyFacade {
 
     /**
      * Persists a Hobby
-     * @param hobby the hobby to be persisted.
+     * @param hobbyDTO the hobby to be persisted.
      * @return The hobby object with a auto-generated ID
      */
-    public Hobby create(Hobby hobby) throws MissingInputException {
+    public HobbyDTO create(HobbyDTO hobbyDTO) throws MissingInputException {
         EntityManager em = emf.createEntityManager();
+        Hobby hobby = new Hobby(hobbyDTO);
         try {
             em.getTransaction().begin();
             em.persist(hobby);
@@ -102,7 +113,8 @@ public class HobbyFacade {
         } finally {
             em.close();
         }
-        return hobby;
+        hobbyDTO.setId(hobby.getId());
+        return hobbyDTO;
     }
 
     // TODO(Benjamin): DELETE Hobby

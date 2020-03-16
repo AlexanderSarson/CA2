@@ -4,6 +4,8 @@ package entities;
  * version 1.0
  */
 
+import dto.PhoneDTO;
+
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -34,6 +36,13 @@ public class Phone implements Serializable {
     public Phone(String number, String description) {
         this.number = number;
         this.description = description;
+    }
+
+    public Phone(PhoneDTO dto) {
+        this.id = dto.getId();
+        this.number = dto.getNumber();
+        this.description = dto.getDescription();
+        this.owner = dto.getOwner();
     }
 
     public int getId() {

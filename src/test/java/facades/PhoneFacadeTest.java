@@ -4,6 +4,7 @@ package facades;
  * version 1.0
  */
 
+import dto.PhoneDTO;
 import entities.Phone;
 import exception.MissingInputException;
 import exception.PhoneNotFoundException;
@@ -28,6 +29,7 @@ public class PhoneFacadeTest {
     private static EntityManagerFactory emf;
     private static PhoneFacade phoneFacade;
     private static Phone p1, p2;
+    private static PhoneDTO pd1, pd2;
 
     public PhoneFacadeTest() {
     }
@@ -51,28 +53,30 @@ public class PhoneFacadeTest {
         } finally {
             entityManager.close();
         }
+        pd1 = new PhoneDTO(p1);
+        pd2 = new PhoneDTO(p2);
     }
 
     @Test public void testGetAll() {
-        List<Phone> phones = phoneFacade.getAll();
-        assertTrue(phones.contains(p1));
-        assertTrue(phones.contains(p2));
+        List<PhoneDTO> phones = phoneFacade.getAll();
+        assertTrue(phones.contains(pd1));
+        assertTrue(phones.contains(pd2));
     }
     @Test public void testGetById_with_valid_id() throws PhoneNotFoundException {
-        int id = p1.getId();
-        Phone phone = phoneFacade.getById(id);
-        assertEquals(p1, phone);
+        Integer id = p1.getId();
+        PhoneDTO phone = phoneFacade.getById(id);
+        assertEquals(pd1, phone);
     }
     @Test public void testGetById_with_invalid_id() {
-        int id = 1000;
+        Integer id = 1000;
         assertThrows(PhoneNotFoundException.class, () -> {
             phoneFacade.getById(id);
         });
     }
     @Test public void testGetByNumber_with_valid_number() throws PhoneNotFoundException {
         String number = p1.getNumber();
-        Phone phone = phoneFacade.getByNumber(number);
-        assertEquals(p1, phone);
+        PhoneDTO phone = phoneFacade.getByNumber(number);
+        assertEquals(pd1, phone);
     }
     @Test public void testGetByNumber_with_invalid_number() {
         String number = "This is not a number";
@@ -82,20 +86,20 @@ public class PhoneFacadeTest {
     }
     @Test public void testCreatePhone_with_valid_input() throws MissingInputException {
         Phone p3 = new Phone("33333333", "New phone who dis?");
-        phoneFacade.create(p3);
-        int nextId = Math.max(p1.getId(), p2.getId()) + 1;
-        assertEquals(nextId, p3.getId());
+        PhoneDTO result = phoneFacade.create(new PhoneDTO(p3));
+        Integer nextId = Math.max(p1.getId(), p2.getId()) + 1;
+        assertEquals(nextId, result.getId());
     }
     @Test public void testCreatePhone_with_invalid_number() throws MissingInputException {
         Phone p3 = new Phone(null, "New phone who dis?");
         assertThrows(MissingInputException.class, () -> {
-            phoneFacade.create(p3);
+            phoneFacade.create(new PhoneDTO(p3));
         });
     }
     @Test public void testCreatePhone_with_non_unique_number() throws MissingInputException {
         Phone p3 = new Phone(p1.getNumber(), "New phone who dis?");
         assertThrows(MissingInputException.class, () -> {
-            phoneFacade.create(p3);
+            phoneFacade.create(new PhoneDTO(p3));
         });
     }
 }

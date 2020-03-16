@@ -4,10 +4,12 @@ package facades;
  * version 1.0
  */
 
+import dto.PhoneDTO;
 import entities.Phone;
 import exception.MissingInputException;
 import exception.PhoneNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -36,24 +38,30 @@ public class PhoneFacade {
         return entityManagerFactory.createEntityManager();
     }
 
-    public List<Phone> getAll() {
+    public List<PhoneDTO> toPhoneDTOList(List<Phone> phones) {
+        List<PhoneDTO> dtos = new ArrayList<>();
+        phones.forEach(phone -> {dtos.add(new PhoneDTO(phone));});
+        return dtos;
+    }
+
+    public List<PhoneDTO> getAll() {
         EntityManager entityManager = getEntityManager();
         try {
             List<Phone> phones = entityManager.createNamedQuery("Phone.getAll", Phone.class)
                     .getResultList();
-            return phones;
+            return toPhoneDTOList(phones);
         } finally {
             entityManager.close();
         }
     }
 
-    public Phone getByNumber(String number) throws PhoneNotFoundException {
+    public PhoneDTO getByNumber(String number) throws PhoneNotFoundException {
         EntityManager entityManager = getEntityManager();
         try {
             Phone phone = entityManager.createNamedQuery("Phone.getByNumber", Phone.class)
                     .setParameter("number", number)
                     .getSingleResult();
-            return phone;
+            return new PhoneDTO(phone);
         } catch (NoResultException e) {
             throw new PhoneNotFoundException();
         } finally {
@@ -61,22 +69,23 @@ public class PhoneFacade {
         }
     }
 
-    public Phone getById(int id) throws PhoneNotFoundException {
+    public PhoneDTO getById(int id) throws PhoneNotFoundException {
         EntityManager entityManager = getEntityManager();
         try {
             Phone phone = entityManager.find(Phone.class, id);
             if(phone == null) {
                 throw new PhoneNotFoundException();
             } else {
-                return phone;
+                return new PhoneDTO(phone);
             }
         } finally {
             entityManager.close();
         }
     }
 
-    public Phone create(Phone phone) throws MissingInputException {
+    public PhoneDTO create(PhoneDTO phoneDTO) throws MissingInputException {
         EntityManager em = entityManagerFactory.createEntityManager();
+        Phone phone = new Phone(phoneDTO);
         try {
             em.getTransaction().begin();
             em.persist(phone);
@@ -86,7 +95,8 @@ public class PhoneFacade {
         } finally {
             em.close();
         }
-        return phone;
+        phoneDTO.setId(phone.getId());
+        return phoneDTO;
     }
 
     // TODO(Benjamin): DELETE Phone

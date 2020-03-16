@@ -95,22 +95,23 @@ public class PersonFacade {
 
     /**
      * Persists the person.
-     * @param person The person to be persisted.
+     * @param personDTO The person to be persisted.
      * @return The persisted person, but with its ID assigned.
      */
-    public PersonDTO create(PersonDTO person) throws MissingInputException {
+    public PersonDTO create(PersonDTO personDTO) throws MissingInputException {
         EntityManager em = entityManagerFactory.createEntityManager();
-        Person result = new Person(person);
+        Person person = new Person(personDTO);
         try {
             em.getTransaction().begin();
-            em.persist(result);
+            em.persist(person);
             em.getTransaction().commit();
         } catch (Exception e) {
             throw new MissingInputException(MissingInputException.DEFAULT_PERSON_MESSAGE);
         } finally {
             em.close();
         }
-        return new PersonDTO(result);
+        personDTO.setId(person.getId());
+        return personDTO;
     }
 
     public int deletePerson(int id) throws PersonNotFoundException {

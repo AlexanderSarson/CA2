@@ -4,6 +4,7 @@ package facades;
  * version 1.0
  */
 
+import dto.CityInfoDTO;
 import entities.CityInfo;
 import exception.CityInfoNotFoundException;
 import exception.MissingInputException;
@@ -28,6 +29,7 @@ public class CityInfoFacadeTest {
     private static EntityManagerFactory entityManagerFactory;
     private static CityInfoFacade cityinfoFacade;
     private static CityInfo c1, c2;
+    private static CityInfoDTO cd1, cd2;
 
     public CityInfoFacadeTest() {
     }
@@ -52,60 +54,62 @@ public class CityInfoFacadeTest {
         } finally {
             entityManager.close();
         }
+        cd1 = new CityInfoDTO(c1);
+        cd2 = new CityInfoDTO(c2);
     }
     @Test public void testGetAll() {
-        List<CityInfo> cityInfoList = cityinfoFacade.getAll();
-        assertTrue(cityInfoList.contains(c1));
-        assertTrue(cityInfoList.contains(c2));
+        List<CityInfoDTO> cityInfoList = cityinfoFacade.getAll();
+        assertTrue(cityInfoList.contains(cd1));
+        assertTrue(cityInfoList.contains(cd2));
     }
     @Test public void testGetById_with_valid_id() throws CityInfoNotFoundException {
-        int id = c1.getId();
-        CityInfo cityInfo = cityinfoFacade.getById(id);
-        assertEquals(c1, cityInfo);
+        Integer id = c1.getId();
+        CityInfoDTO cityInfo = cityinfoFacade.getById(id);
+        assertEquals(cd1, cityInfo);
     }
     @Test public void testGetById_with_invalid_id() {
-        int id = 1000;
+        Integer id = 1000;
         assertThrows(CityInfoNotFoundException.class, () -> {
             cityinfoFacade.getById(id);
         });
     }
     @Test public void testGetByZipCode_with_valid_zipCode() throws CityInfoNotFoundException {
-        int zipCode = c1.getZipCode();
-        CityInfo cityInfo = cityinfoFacade.getByZipCode(zipCode);
-        assertEquals(c1, cityInfo);
+        Integer zipCode = c1.getZipCode();
+        CityInfoDTO cityInfo = cityinfoFacade.getByZipCode(zipCode);
+        assertEquals(cd1, cityInfo);
     }
     @Test public void testGetByZipCode_with_invalid_zipcode() {
-        int zipCode = 1000;
+        Integer zipCode = 1000;
         assertThrows(CityInfoNotFoundException.class, () -> {
             cityinfoFacade.getByZipCode(zipCode);
         });
     }
     @Test public void testGetByCity_with_valid_city() {
         String city = c1.getCity();
-        List<CityInfo> cityInfo = cityinfoFacade.getByCity(city);
-        assertTrue(cityInfo.contains(c1));
+        List<CityInfoDTO> cityInfo = cityinfoFacade.getByCity(city);
+        assertTrue(cityInfo.contains(cd1));
     }
     @Test public void testGetByCity_with_invalid_city() {
         String city = "This is not a city";
-        List<CityInfo> cityInfos = cityinfoFacade.getByCity(city);
+        List<CityInfoDTO> cityInfos = cityinfoFacade.getByCity(city);
         assertEquals(0, cityInfos.size());
     }
     @Test public void testCreateCityInfo_with_valid_input() throws MissingInputException {
         CityInfo c3 = new CityInfo(3333, "Lyngby");
-        cityinfoFacade.create(c3);
-        int nextId = Math.max(c1.getId(), c2.getId()) + 1;
-        assertEquals(nextId, c3.getId());
+        CityInfoDTO result = cityinfoFacade.create(new CityInfoDTO(c3));
+        Integer nextId = Math.max(c1.getId(), c2.getId()) + 1;
+        assertEquals(nextId, result.getId());
     }
     @Test public void testCreateCityInfo_with_non_unique_zipCode() {
         CityInfo c3 = new CityInfo(c1.getZipCode(), "We don't have a unique zipcode");
         assertThrows(MissingInputException.class, () -> {
-            cityinfoFacade.create(c3);
+            cityinfoFacade.create(new CityInfoDTO(c3));
         });
     }
     @Test public void testCreateCityInfo_with_invalid_city() {
         CityInfo c3 = new CityInfo(5141,null);
         assertThrows(MissingInputException.class, () -> {
-            cityinfoFacade.create(c3);
+            cityinfoFacade.create(new CityInfoDTO(c3));
         });
     }
 }

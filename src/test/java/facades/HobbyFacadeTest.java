@@ -4,6 +4,7 @@ package facades;
  * version 1.0
  */
 
+import dto.HobbyDTO;
 import entities.Hobby;
 import exception.HobbyNotFoundException;
 import exception.MissingInputException;
@@ -28,6 +29,7 @@ public class HobbyFacadeTest {
     private static EntityManagerFactory entityManagerFactory;
     private static HobbyFacade hobbyFacade;
     private static Hobby h1, h2;
+    private static HobbyDTO hd1, hd2;
     public HobbyFacadeTest() {
     }
 
@@ -51,28 +53,30 @@ public class HobbyFacadeTest {
         } finally {
             entityManager.close();
         }
+        hd1 = new HobbyDTO(h1);
+        hd2 = new HobbyDTO(h2);
     }
 
     @Test public void testGetAll() {
-        List<Hobby> hobbies = hobbyFacade.getAll();
-        assertTrue(hobbies.contains(h1));
-        assertTrue(hobbies.contains(h2));
+        List<HobbyDTO> hobbies = hobbyFacade.getAll();
+        assertTrue(hobbies.contains(hd1));
+        assertTrue(hobbies.contains(hd2));
     }
     @Test public void testGetById_with_valid_id() throws HobbyNotFoundException {
-        int id = h1.getId();
-        Hobby hobby = hobbyFacade.getById(id);
-        assertEquals(h1,hobby);
+        Integer id = h1.getId();
+        HobbyDTO hobby = hobbyFacade.getById(id);
+        assertEquals(hd1,hobby);
     }
     @Test public void testGetById_with_invalid_id() {
-        int id = 1000;
+        Integer id = 1000;
         assertThrows(HobbyNotFoundException.class, () -> {
             hobbyFacade.getById(id);
         });
     }
     @Test public void testGetByName_with_valid_name() throws HobbyNotFoundException {
         String name = h1.getName();
-        Hobby hobby = hobbyFacade.getByName(name);
-        assertEquals(h1, hobby);
+        HobbyDTO hobby = hobbyFacade.getByName(name);
+        assertEquals(hd1, hobby);
     }
     @Test public void testGetByName_with_invalid_name() {
         String name = "This is not a hobby";
@@ -83,19 +87,19 @@ public class HobbyFacadeTest {
     @Test public void testCreateHobby_with_valid_input() throws MissingInputException {
         Hobby hobby = new Hobby("Tennis", "We play alot of tennis");
         Integer expectedID = Math.max(h1.getId(),h2.getId()) + 1;
-        hobbyFacade.create(hobby);
-        assertEquals(expectedID, hobby.getId());
+        HobbyDTO result = hobbyFacade.create(new HobbyDTO(hobby));
+        assertEquals(expectedID, result.getId());
     }
     @Test public void testCreateHobby_with_missing_name() {
         Hobby hobby = new Hobby(null, "we are missing a name");
         assertThrows(MissingInputException.class, () -> {
-           hobbyFacade.create(hobby);
+           hobbyFacade.create(new HobbyDTO(hobby));
         });
     }
     @Test public void testCreateHobby_with_non_unique_name() {
         Hobby hobby = new Hobby(h1.getName(), "We do not have a unique name");
         assertThrows(MissingInputException.class, () ->  {
-           hobbyFacade.create(hobby);
+           hobbyFacade.create(new HobbyDTO(hobby));
         });
     }
 

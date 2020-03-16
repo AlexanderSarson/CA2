@@ -4,10 +4,12 @@ package facades;
  * version 1.0
  */
 
+import dto.AddressDTO;
 import entities.Address;
 import exception.AddressNotFoundException;
 import exception.MissingInputException;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -37,45 +39,54 @@ public class AddressFacade {
         return entityManagerFactory.createEntityManager();
     }
 
-    public List<Address> getAll() {
+    private List<AddressDTO> toAddressDTOList(List<Address> addresses) {
+        List<AddressDTO> dtos = new ArrayList<>();
+        addresses.forEach( address -> {
+            dtos.add(new AddressDTO(address));
+        });
+        return dtos;
+    }
+
+    public List<AddressDTO> getAll() {
         EntityManager entityManager = getEntityManager();
         try {
             List<Address> addresses = entityManager.createNamedQuery("Address.getAll",Address.class)
                     .getResultList();
-            return addresses;
+            return toAddressDTOList(addresses);
         } finally {
             entityManager.close();
         }
     }
 
-    public List<Address> getByStreet(String street) {
+    public List<AddressDTO> getByStreet(String street) {
         EntityManager entityManager = getEntityManager();
         try {
             List<Address> addresses = entityManager.createNamedQuery("Address.getByStreet",Address.class)
                     .setParameter("street", street)
                     .getResultList();
-            return addresses;
+            return toAddressDTOList(addresses);
         } finally {
             entityManager.close();
         }
     }
 
-    public Address getById(int id) throws AddressNotFoundException {
+    public AddressDTO getById(int id) throws AddressNotFoundException {
         EntityManager entityManager = getEntityManager();
         try {
             Address address = entityManager.find(Address.class, id);
             if(address == null) {
                 throw new AddressNotFoundException();
             } else {
-                return address;
+                return new AddressDTO(address);
             }
         } finally {
             entityManager.close();
         }
     }
 
-    public Address create(Address address) throws MissingInputException {
+    public AddressDTO create(AddressDTO addressDTO) throws MissingInputException {
         EntityManager em = entityManagerFactory.createEntityManager();
+        Address address = new Address(addressDTO);
         try {
             em.getTransaction().begin();
             em.persist(address);
@@ -85,7 +96,8 @@ public class AddressFacade {
         } finally {
             em.close();
         }
-        return address;
+        addressDTO.setId(address.getId());
+        return addressDTO;
     }
 
     // TODO(Benjamin): UPDATE Address
