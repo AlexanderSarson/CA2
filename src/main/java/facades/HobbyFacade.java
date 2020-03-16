@@ -116,7 +116,45 @@ public class HobbyFacade {
         hobbyDTO.setId(hobby.getId());
         return hobbyDTO;
     }
+    
+       public HobbyDTO updateHobby(HobbyDTO hobbyDTO) throws HobbyNotFoundException, MissingInputException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Hobby hobby = em.find(Hobby.class, hobbyDTO.getId());
+            if (hobby == null) {
+                throw new HobbyNotFoundException();
+            } else {
+                em.getTransaction().begin();
+                hobby.setName(hobbyDTO.getName());
+                hobby.setDescription(hobbyDTO.getDescription());
+                em.merge(hobby);
+                em.getTransaction().commit();
+                return hobbyDTO;
+            }
+        } catch (RollbackException e) {
+            throw new MissingInputException(MissingInputException.DEFAULT_HOBBY_MESSAGE);
+        } finally {
+            em.close();
+        }
+    }
 
-    // TODO(Benjamin): DELETE Hobby
-    // TODO(Benjamin): UPDATE Hobby
+    public HobbyDTO deleteHobby(int id) throws HobbyNotFoundException, MissingInputException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Hobby hobby = em.find(Hobby.class, id);
+            if (hobby == null) {
+                throw new HobbyNotFoundException();
+            } else {
+                em.getTransaction().begin();
+                em.remove(hobby);
+                em.getTransaction().commit();
+                return new HobbyDTO(hobby);
+            }
+        } catch (RollbackException e) {
+            throw new MissingInputException(MissingInputException.DEFAULT_HOBBY_MESSAGE);
+        } finally {
+            em.close();
+        }
+    }
+
 }

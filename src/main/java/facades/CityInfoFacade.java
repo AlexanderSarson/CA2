@@ -4,11 +4,8 @@ package facades;
  * version 1.0
  */
 
-import dto.AddressDTO;
 import dto.CityInfoDTO;
-import entities.Address;
 import entities.CityInfo;
-import exception.AddressNotFoundException;
 import exception.CityInfoNotFoundException;
 import exception.MissingInputException;
 

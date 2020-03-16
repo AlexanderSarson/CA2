@@ -102,5 +102,41 @@ public class HobbyFacadeTest {
            hobbyFacade.create(new HobbyDTO(hobby));
         });
     }
+    
+        @Test public void testUpdateHobby() throws HobbyNotFoundException, MissingInputException{
+        String expected = "Hakkuh";
+        hd1.setName(expected);
+        String result = hobbyFacade.updateHobby(hd1).getName();
+        assertEquals(expected, result);
+             
+    }
+    
+    @Test public void testUpdateHobby_with_missing_input(){
+        hd1.setDescription(null);
+        assertThrows(MissingInputException.class, () -> {
+            hobbyFacade.updateHobby(hd1);
+        });
+    }
+    
+    @Test public void testUpdateHobby_with_invalid_id() {
+        hd1.setId(1000);
+        assertThrows(HobbyNotFoundException.class, () -> {
+            hobbyFacade.updateHobby(hd1);
+        });
+        
+    }
+    
+    @Test public void testDeleteHobby() throws HobbyNotFoundException, MissingInputException{
+        int expected = hd1.getId();
+        HobbyDTO hd3 = hobbyFacade.deleteHobby(expected);
+        assertEquals(hd1, hd3);
+    }
+    
+    @Test public void testDeleteHobby_with_invalid_id(){
+        int id = 10000;
+        assertThrows(HobbyNotFoundException.class, () -> {
+            hobbyFacade.deleteHobby(id);
+        });
+    }
 
 }
