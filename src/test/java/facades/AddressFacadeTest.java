@@ -35,6 +35,7 @@ public class AddressFacadeTest {
     private static EntityManagerFactory entityManagerFactory;
     private static AddressFacade addressFacade;
     private static Address a1, a2;
+    private static AddressDTO ad1, ad2;
 
     public AddressFacadeTest() {
     }
@@ -59,6 +60,8 @@ public class AddressFacadeTest {
         } finally {
             em.close();
         }
+        ad1 = new AddressDTO(a1);
+        ad2 = new AddressDTO(a2);
     }
 
     @Test public void testGetAll() {
@@ -100,4 +103,41 @@ public class AddressFacadeTest {
             addressFacade.create(new AddressDTO(a3));
         });
     }
+    
+    @Test public void testUpdateAddress() throws AddressNotFoundException, MissingInputException{
+        String expected = "Vej Allé 1";
+        ad1.setStreet(expected);
+        String result = addressFacade.updateAddress(ad1).getStreet();
+        assertEquals(expected, result);
+             
+    }
+    
+    @Test public void testUpdateAddress_with_missing_input(){
+        ad1.setStreet(null);
+        assertThrows(MissingInputException.class, () -> {
+            addressFacade.updateAddress(ad1);
+        });
+    }
+    
+    @Test public void testUpdateAddress_with_invalid_id() {
+        ad1.setId(1000);
+        assertThrows(AddressNotFoundException.class, () -> {
+            addressFacade.updateAddress(ad1);
+        });
+        
+    }
+    
+    @Test public void testDeleteAddress() throws AddressNotFoundException, MissingInputException{
+        int expected = ad1.getId();
+        AddressDTO ad3 = addressFacade.deleteAddress(expected);
+        assertEquals(ad1, ad3);
+    }
+    
+    @Test public void testDeleteAddress_with_invalid_id(){
+        int id = 10000;
+        assertThrows(AddressNotFoundException.class, () -> {
+            addressFacade.deleteAddress(id);
+        });
+    }
+    
 }

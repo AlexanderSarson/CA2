@@ -1,4 +1,5 @@
 package entities;
+
 /*
  * author paepke
  * version 1.0
@@ -11,14 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-
 @Entity
 @Table(name = "Address")
 @NamedQueries({
     @NamedQuery(name = "Address.deleteAllRows", query = "DELETE FROM Address"),
     @NamedQuery(name = "Address.getAll", query = "SELECT a FROM Address a"),
-    @NamedQuery(name = "Address.getByStreet", query = "SELECT a FROM Address a WHERE a.street LIKE :street"),
-})
+    @NamedQuery(name = "Address.getByStreet", query = "SELECT a FROM Address a WHERE a.street LIKE :street"),})
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -82,7 +81,9 @@ public class Address implements Serializable {
 
     public void setCityInfo(CityInfo cityInfo) {
         this.cityInfo = cityInfo;
-        cityInfo.addAddress(this);
+        if (cityInfo != null) {
+            cityInfo.addAddress(this);
+        }
     }
 
     public void addPerson(Person person) {
@@ -95,10 +96,13 @@ public class Address implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null) return false;
-        if(obj.getClass() != this.getClass()) return false;
-        else {
-            Address other = (Address)obj;
+        if (obj == null) {
+            return false;
+        }
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        } else {
+            Address other = (Address) obj;
             return other.getId() == this.id;
         }
     }
