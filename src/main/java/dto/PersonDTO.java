@@ -29,8 +29,8 @@ public class PersonDTO {
     @Schema(required = true, example = "Jensen")
     private String lastName;
 
-    private List<Hobby> hobbies = new ArrayList<>();
-    private List<Phone> phones = new ArrayList<>();
+    private HobbyListDTO hobbies = new HobbyListDTO();
+    private PhoneListDTO phones = new PhoneListDTO();
     private Address address;
 
     public PersonDTO(int id, String email, String firstName, String lastName) {
@@ -45,8 +45,8 @@ public class PersonDTO {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.email = person.getEmail();
-        this.hobbies = person.getHobbies();
-        this.phones = person.getPhones();
+        this.hobbies.setHobbyList(HobbyListDTO.convertToHobbyListDTO(person.getHobbies()));
+        this.phones.setPhoneList(PhoneListDTO.convertToHobbyListDTO(person.getPhones()));
         this.address = person.getAddress();
     }
 
@@ -81,21 +81,20 @@ public class PersonDTO {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-    public List<Hobby> getHobbies() {
-        return hobbies;
+    
+    public void addHobby(HobbyDTO hobby){
+        this.hobbies.addHobby(hobby);
     }
-
-    public void setHobbies(List<Hobby> hobbies) {
-        this.hobbies = hobbies;
+    
+    public void addPhone(PhoneDTO phone){
+        this.phones.addPhone(phone);
     }
-
-    public List<Phone> getPhones() {
-        return phones;
+    
+    public HobbyListDTO getHobbies(){
+        return this.hobbies;
     }
-
-    public void setPhones(List<Phone> phones) {
-        this.phones = phones;
+    public PhoneListDTO getPhones(){
+        return this.phones;
     }
 
     @Override

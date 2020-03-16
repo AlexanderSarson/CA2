@@ -15,8 +15,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -71,6 +73,23 @@ public class PersonResource {
         return list;
     }
     
-
+    
+    @Operation(summary = "Get info about a person from phone number",
+            tags = {"person"},
+            responses = {
+                @ApiResponse(
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
+                @ApiResponse(responseCode = "200", description = "The Requested list of a Person"),
+                @ApiResponse(responseCode = "404", description = "Person not found")})
+    @GET
+    @Path("{phone}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<PersonDTO> getPersonInfoByPhoneNumber(@PathParam("phone") String phone){
+        List<PersonDTO> list = new ArrayList<>();
+        list.add(new PersonDTO(1, "email@example.com", "Jens", "Sorensen"));
+        return list;
+    }
+            
  
 }

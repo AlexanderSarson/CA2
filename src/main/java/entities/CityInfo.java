@@ -4,6 +4,8 @@ package entities;
  * version 1.0
  */
 
+import dto.AddressDTO;
+import dto.AddressListDTO;
 import dto.CityInfoDTO;
 
 import java.io.Serializable;
@@ -46,7 +48,7 @@ public class CityInfo implements Serializable {
         this.id = cityInfoDTO.getId();
         this.zipCode = cityInfoDTO.getZipCode();
         this.city = cityInfoDTO.getCity();
-        this.addresses = cityInfoDTO.getAddresses();
+        this.addresses = cityInfoDTO.getAddresses().convertAddressList();
     }
 
     public Integer getId() {
@@ -85,6 +87,12 @@ public class CityInfo implements Serializable {
 
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+    }
+    
+    public AddressListDTO convertToAddressListDTO(){
+        AddressListDTO addressListDTO = new AddressListDTO();
+        this.addresses.forEach(address -> addressListDTO.addAddress(new AddressDTO(address)));
+        return addressListDTO;
     }
 
     @Override
