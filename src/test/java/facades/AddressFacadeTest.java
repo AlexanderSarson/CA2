@@ -5,6 +5,7 @@ package facades;
  */
 
 import dto.AddressDTO;
+import dto.CityInfoDTO;
 import dto.PersonDTO;
 import entities.Address;
 import entities.Person;
@@ -62,6 +63,8 @@ public class AddressFacadeTest {
         }
         ad1 = new AddressDTO(a1);
         ad2 = new AddressDTO(a2);
+        ad1.setCityInfo(new CityInfoDTO(1, 2880, "bagsvaerd"));
+        ad2.setCityInfo(new CityInfoDTO(1, 2880, "bagsvaerd"));
     }
 
     @Test public void testGetAll() {

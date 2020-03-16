@@ -42,7 +42,6 @@ public class Phone implements Serializable {
         this.id = dto.getId();
         this.number = dto.getNumber();
         this.description = dto.getDescription();
-        this.owner = dto.getOwner();
     }
 
     public int getId() {

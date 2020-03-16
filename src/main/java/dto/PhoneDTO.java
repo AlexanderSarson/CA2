@@ -1,8 +1,9 @@
 package dto;
 
-import entities.Person;
 import entities.Phone;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.List;
 
 @Schema(name = "PhoneDTO")
 public class PhoneDTO {
@@ -13,7 +14,8 @@ public class PhoneDTO {
     @Schema(example = "Work")
     private String description;
 
-    private Person owner;
+    public PhoneDTO() {
+    }
 
     public PhoneDTO(Integer id, String number, String description) {
         this.id = id;
@@ -25,7 +27,6 @@ public class PhoneDTO {
         this.id = phone.getId();
         this.number = phone.getNumber();
         this.description = phone.getDescription();
-        this.owner = phone.getOwner();
     }
 
     public Integer getId() {
@@ -51,13 +52,17 @@ public class PhoneDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public Person getOwner() {
-        return owner;
+    
+    public static List<PhoneDTO> convertToPhoneDTO(List<Phone> phones){
+        List<PhoneDTO> phoneDTOList = new ArrayList<>();
+        phones.forEach(phone -> phoneDTOList.add(new PhoneDTO(phone)));
+        return phoneDTOList;
     }
-
-    public void setOwner(Person owner) {
-        this.owner = owner;
+    
+    public static List<Phone> convertToPhone(List<PhoneDTO> phonesDTO){
+        List<Phone> phoneList = new ArrayList<>();
+        phonesDTO.forEach(phone -> phoneList.add(new Phone(phone)));
+        return phoneList;
     }
 
     @Override

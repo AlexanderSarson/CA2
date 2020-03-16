@@ -6,6 +6,7 @@ package facades;
  */
 import dto.AddressDTO;
 import entities.Address;
+import entities.CityInfo;
 import exception.AddressNotFoundException;
 import exception.MissingInputException;
 
@@ -110,7 +111,7 @@ public class AddressFacade {
                 em.getTransaction().begin();
                 address.setStreet(addressDTO.getStreet());
                 address.setAdditionalInfoInfo(addressDTO.getAdditionalInfo());
-                address.setCityInfo(addressDTO.getCityInfo());
+                address.setCityInfo(new CityInfo(addressDTO.getCityInfo()));
                 em.merge(address);
                 em.getTransaction().commit();
                 return addressDTO;

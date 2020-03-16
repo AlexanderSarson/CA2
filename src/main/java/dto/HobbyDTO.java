@@ -1,9 +1,7 @@
 package dto;
 
 import entities.Hobby;
-import entities.Person;
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +14,8 @@ public class HobbyDTO {
     @Schema(example = "All we do is play chess")
     private String description;
 
-    private List<Person> persons = new ArrayList<>();
+    public HobbyDTO() {
+    }
 
     public HobbyDTO(Integer id, String name, String description) {
         this.id = id;
@@ -28,7 +27,6 @@ public class HobbyDTO {
         this.id = hobby.getId();
         this.name = hobby.getName();
         this.description = hobby.getDescription();
-        this.persons = hobby.getPersons();
     }
 
     public Integer getId() {
@@ -55,14 +53,18 @@ public class HobbyDTO {
         this.description = description;
     }
 
-    public List<Person> getPersons() {
-        return persons;
+    public static List<HobbyDTO> convertToHobbyDTO(List<Hobby> hobbies){
+        List<HobbyDTO> hobbyDTOList = new ArrayList<>();
+        hobbies.forEach(hobby -> hobbyDTOList.add(new HobbyDTO(hobby)));
+        return hobbyDTOList;
     }
-
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
+    
+    public static List<Hobby> convertToHobby(List<HobbyDTO> hobbiesDTO){
+        List<Hobby> hobbyList = new ArrayList<>();
+        hobbiesDTO.forEach(hobbyDTO -> hobbyList.add(new Hobby(hobbyDTO)));
+        return hobbyList;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if(obj == null) return false;

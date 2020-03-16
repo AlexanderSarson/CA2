@@ -45,7 +45,6 @@ public class Hobby implements Serializable {
         this.id = hobbyDTO.getId();
         this.name = hobbyDTO.getName();
         this.description = hobbyDTO.getDescription();
-        this.persons = hobbyDTO.getPersons();
     }
 
     public Integer getId() {

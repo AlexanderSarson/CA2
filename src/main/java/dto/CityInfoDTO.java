@@ -1,11 +1,7 @@
 package dto;
 
-import entities.Address;
 import entities.CityInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Schema(name = "CityInfoDTO")
 public class CityInfoDTO {
@@ -16,7 +12,8 @@ public class CityInfoDTO {
     @Schema(required = true, example = "Lyngby")
     private String city;
 
-    private List<Address> addresses = new ArrayList<>();
+    public CityInfoDTO() {
+    }
 
     public CityInfoDTO(Integer id, Integer zipCode, String city) {
         this.id = id;
@@ -28,7 +25,6 @@ public class CityInfoDTO {
         this.id = cityInfo.getId();
         this.zipCode = cityInfo.getZipCode();
         this.city = cityInfo.getCity();
-        this.addresses = cityInfo.getAddresses();
     }
 
     
@@ -54,14 +50,6 @@ public class CityInfoDTO {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
     }
 
     @Override
