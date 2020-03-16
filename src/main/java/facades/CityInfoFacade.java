@@ -8,6 +8,7 @@ import dto.AddressDTO;
 import dto.CityInfoDTO;
 import entities.Address;
 import entities.CityInfo;
+import exception.AddressNotFoundException;
 import exception.CityInfoNotFoundException;
 import exception.MissingInputException;
 
@@ -17,6 +18,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
+import javax.persistence.RollbackException;
 
 
 public class CityInfoFacade {
@@ -118,6 +120,45 @@ public class CityInfoFacade {
         return cityInfoDTO;
     }
 
-    // TODO(Benjamin): DELETE CityInfo
-    // TODO(Benjamin): UPDATE CityInfo
+        public CityInfoDTO updateCityInfo(CityInfoDTO ctd) throws CityInfoNotFoundException, MissingInputException {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        try {
+            CityInfo ct = em.find(CityInfo.class, ctd.getId());
+            if (ct == null) {
+                throw new CityInfoNotFoundException();
+            } else {
+                em.getTransaction().begin();
+                ct.setCity(ctd.getCity());
+                ct.setZipCode(ctd.getZipCode());
+                em.merge(ct);
+                em.getTransaction().commit();
+                return ctd;
+            }
+        } catch (RollbackException e) {
+            throw new MissingInputException(MissingInputException.DEFAULT_CITYINFO_MESSAGE);
+        } finally {
+            em.close();
+        }
+    }
+
+    public CityInfoDTO deleteCityInfo(int id) throws CityInfoNotFoundException, MissingInputException {
+        EntityManager em = getEntityManager();
+        try {
+            CityInfo cityInfo = em.find(CityInfo.class, id);
+            if (cityInfo == null) {
+                throw new CityInfoNotFoundException();
+            } else {
+                em.getTransaction().begin();
+                em.remove(cityInfo);
+                em.getTransaction().commit();
+                return new CityInfoDTO(cityInfo);
+            }
+        } catch (RollbackException e) {
+            //TODO: Create specific exception 
+            throw new MissingInputException(MissingInputException.DEFAULT_CITYINFO_MESSAGE);
+        } finally {
+            em.close();
+        }
+    }
+
 }

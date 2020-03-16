@@ -31,7 +31,7 @@ public class CityInfoDTO {
         this.addresses = cityInfo.getAddresses();
     }
 
-
+    
     public Integer getId() {
         return id;
     }
