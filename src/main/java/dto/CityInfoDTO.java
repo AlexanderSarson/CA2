@@ -16,7 +16,7 @@ public class CityInfoDTO {
     @Schema(required = true, example = "Lyngby")
     private String city;
 
-    private List<Address> addresses = new ArrayList<>();
+    private AddressListDTO addresses = new AddressListDTO();
 
     public CityInfoDTO(Integer id, Integer zipCode, String city) {
         this.id = id;
@@ -28,7 +28,7 @@ public class CityInfoDTO {
         this.id = cityInfo.getId();
         this.zipCode = cityInfo.getZipCode();
         this.city = cityInfo.getCity();
-        this.addresses = cityInfo.getAddresses();
+        this.addresses = cityInfo.convertToAddressListDTO();
     }
 
     
@@ -56,13 +56,10 @@ public class CityInfoDTO {
         this.city = city;
     }
 
-    public List<Address> getAddresses() {
+    public AddressListDTO getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
 
     @Override
     public boolean equals(Object obj) {

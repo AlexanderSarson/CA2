@@ -16,7 +16,7 @@ public class HobbyDTO {
     @Schema(example = "All we do is play chess")
     private String description;
 
-    private List<Person> persons = new ArrayList<>();
+    private PersonListDTO persons = new PersonListDTO();
 
     public HobbyDTO(Integer id, String name, String description) {
         this.id = id;
@@ -28,7 +28,7 @@ public class HobbyDTO {
         this.id = hobby.getId();
         this.name = hobby.getName();
         this.description = hobby.getDescription();
-        this.persons = hobby.getPersons();
+        this.persons.setPersonList(PersonListDTO.convertToPersonListDTO(hobby.getPersons()));
     }
 
     public Integer getId() {
@@ -54,13 +54,13 @@ public class HobbyDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public List<Person> getPersons() {
-        return persons;
+    
+    public void addPerson(PersonDTO person){
+        this.persons.addPerson(person);
     }
-
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
+    
+    public PersonListDTO getPersons(){
+        return this.persons;
     }
 
     @Override

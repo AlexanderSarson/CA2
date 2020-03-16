@@ -6,6 +6,7 @@ package entities;
  */
 
 import dto.AddressDTO;
+import dto.PersonListDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class Address implements Serializable {
         this.street = addressDTO.getStreet();
         this.additionalInfo = addressDTO.getAdditionalInfo();
         this.cityInfo = addressDTO.getCityInfo();
-        this.persons = addressDTO.getPersons();
+        this.persons = addressDTO.getPersons().convertToPersonList();
     }
 
     public int getId() {
