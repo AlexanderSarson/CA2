@@ -88,6 +88,12 @@ public class CityInfo implements Serializable {
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
     }
+    
+    public AddressListDTO convertToAddressListDTO(){
+        AddressListDTO addressListDTO = new AddressListDTO();
+        this.addresses.forEach(address -> addressListDTO.addAddress(new AddressDTO(address)));
+        return addressListDTO;
+    }
 
     @Override
     public boolean equals(Object obj) {
