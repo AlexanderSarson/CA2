@@ -21,7 +21,7 @@ import java.util.List;
 @Schema(name = "PersonDTO") 
 public class PersonDTO {
     @Schema(required = true, example = "1")
-    private int id;
+    private Integer id;
     @Schema(required = true, example = "person@example.com")
     private String email;
     @Schema(required = true, example = "Frederik")
@@ -50,11 +50,11 @@ public class PersonDTO {
         this.address = person.getAddress();
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -107,7 +107,8 @@ public class PersonDTO {
             return false;
         } else {
             PersonDTO other = (PersonDTO)obj;
-            return this.id == other.getId();
+            if(id == null || other.getId() == null) return false;
+            return this.id.equals(other.getId());
         }
     }
 

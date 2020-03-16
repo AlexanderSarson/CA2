@@ -1,42 +1,34 @@
-package entities;
-/*
- * author paepke
- * version 1.0
- */
+package dto;
 
-import java.io.Serializable;
+import entities.Hobby;
+import entities.Person;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
 
-
-@Entity
-@Table(name = "Hobby")
-@NamedQueries({
-    @NamedQuery(name = "Hobby.deleteAllRows", query = "DELETE FROM Hobby"),
-    @NamedQuery(name = "Hobby.findByName", query = "SELECT h FROM Hobby h WHERE h.name LIKE :name"),
-    @NamedQuery(name = "Hobby.getAll", query = "SELECT h FROM Hobby h"),
-})
-public class Hobby implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Schema(name = "HobbyDTO")
+public class HobbyDTO {
+    @Schema(required = true, example = "1")
     private Integer id;
-    @Column(nullable = false, unique = true)
+    @Schema(required = true, example = "Chess")
     private String name;
-    @Column(nullable = false)
+    @Schema(example = "All we do is play chess")
     private String description;
 
-    @ManyToMany(mappedBy = "hobbies")
-    List<Person> persons = new ArrayList<>();
+    private List<Person> persons = new ArrayList<>();
 
-    public Hobby() {
-    }
-
-    public Hobby(String name, String description) {
+    public HobbyDTO(Integer id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public HobbyDTO(Hobby hobby)  {
+        this.id = hobby.getId();
+        this.name = hobby.getName();
+        this.description = hobby.getDescription();
+        this.persons = hobby.getPersons();
     }
 
     public Integer getId() {
@@ -63,14 +55,12 @@ public class Hobby implements Serializable {
         this.description = description;
     }
 
-    public void addPerson(Person person) {
-        if(!persons.contains(person)){
-            persons.add(person);
-        }
-    }
-
     public List<Person> getPersons() {
         return persons;
+    }
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
     }
 
     @Override
@@ -78,7 +68,7 @@ public class Hobby implements Serializable {
         if(obj == null) return false;
         if(obj.getClass() != this.getClass()) return false;
         else {
-            Hobby other = (Hobby)obj;
+            HobbyDTO other = (HobbyDTO)obj;
             if(this.id == null || other.getId() == null) return false;
             return other.getId().equals(this.id);
         }

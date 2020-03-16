@@ -9,7 +9,6 @@ import dto.PersonDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Named;
 import javax.persistence.*;
 
 
@@ -26,7 +25,7 @@ public class Person implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(nullable = false)
     private String firstName;
     @Column(nullable = false)
@@ -67,11 +66,11 @@ public class Person implements Serializable {
         this.address = dto.getAddress();
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -109,16 +108,31 @@ public class Person implements Serializable {
     }
 
     public void addHobby(Hobby hobby) {
-        hobbies.add(hobby);
+        hobby.addPerson(this);
+        if(!hobbies.contains(hobby)) {
+            hobbies.add(hobby);
+        }
     }
 
     public List<Hobby> getHobbies() { return hobbies; }
 
     public void addPhone(Phone phone) {
-        // NOTE(Benjamin): Adding the bi-directional relation here! - and not in method phone.setOwner()
         phone.setOwner(this);
-        phones.add(phone);
+        if(!phones.contains(phone)) {
+            phones.add(phone);
+        }
     }
 
     public List<Phone> getPhones() { return phones; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+        if(obj.getClass() != this.getClass()) return false;
+        else {
+            Person other = (Person)obj;
+            if(this.id == null || other.getId() == null) return false;
+            return other.getId().equals(this.id);
+        }
+    }
 }

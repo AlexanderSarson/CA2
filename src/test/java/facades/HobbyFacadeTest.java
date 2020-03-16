@@ -82,7 +82,7 @@ public class HobbyFacadeTest {
     }
     @Test public void testCreateHobby_with_valid_input() throws MissingInputException {
         Hobby hobby = new Hobby("Tennis", "We play alot of tennis");
-        int expectedID = Math.max(h1.getId(),h2.getId()) + 1;
+        Integer expectedID = Math.max(h1.getId(),h2.getId()) + 1;
         hobbyFacade.create(hobby);
         assertEquals(expectedID, hobby.getId());
     }

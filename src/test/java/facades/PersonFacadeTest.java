@@ -85,7 +85,7 @@ public class PersonFacadeTest {
         Person p3 = new Person("Benny", "Hill", "bHill@outlook.com");
         PersonDTO result = personFacade.create(new PersonDTO(p3));
         // NOTE(Benjamin): This ID must be calculated during runtime, else we have no idea what it will be.
-        int nextId = Math.max(p1.getId(),p2.getId()) + 1;
+        Integer nextId = Math.max(p1.getId(),p2.getId()) + 1;
         assertEquals(nextId, result.getId());
     }
     @Test public void testCreatePerson_with_invalid_firstName() {

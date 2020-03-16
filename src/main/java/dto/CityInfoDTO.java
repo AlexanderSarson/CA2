@@ -1,44 +1,36 @@
-package entities;
-/*
- * author paepke
- * version 1.0
- */
+package dto;
 
-import java.io.Serializable;
+import entities.Address;
+import entities.CityInfo;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
 
-
-@Entity
-@Table(name = "CityInfo")
-@NamedQueries({
-    @NamedQuery(name = "CityInfo.deleteAllRows", query = "DELETE FROM CityInfo"),
-    @NamedQuery(name = "CityInfo.getAll", query = "SELECT c FROM CityInfo c"),
-    @NamedQuery(name = "CityInfo.getByZipCode", query = "SELECT c FROM CityInfo c WHERE c.zipCode = :zipCode"),
-    @NamedQuery(name = "CityInfo.getByCity", query = "SELECT c FROM CityInfo c WHERE c.city LIKE :city"),
-})
-public class CityInfo implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Schema(name = "CityInfoDTO")
+public class CityInfoDTO {
+    @Schema(required = true, example = "1")
     private Integer id;
-    @Column(unique = true, nullable = false)
+    @Schema(required = true, example = "2800")
     private Integer zipCode;
-    @Column(nullable = false)
+    @Schema(required = true, example = "Lyngby")
     private String city;
 
-    @OneToMany(mappedBy = "cityInfo", cascade = CascadeType.PERSIST)
     private List<Address> addresses = new ArrayList<>();
 
-    public CityInfo() {
-    }
-
-    public CityInfo(int zipCode, String city) {
+    public CityInfoDTO(Integer id, Integer zipCode, String city) {
+        this.id = id;
         this.zipCode = zipCode;
         this.city = city;
     }
+
+    public CityInfoDTO(CityInfo cityInfo) {
+        this.id = cityInfo.getId();
+        this.zipCode = cityInfo.getZipCode();
+        this.city = cityInfo.getCity();
+        this.addresses = cityInfo.getAddresses();
+    }
+
 
     public Integer getId() {
         return id;
@@ -64,12 +56,6 @@ public class CityInfo implements Serializable {
         this.city = city;
     }
 
-    public void addAddress(Address address) {
-        if(!addresses.contains(address)) {
-            addresses.add(address);
-        }
-    }
-
     public List<Address> getAddresses() {
         return addresses;
     }
@@ -83,7 +69,7 @@ public class CityInfo implements Serializable {
         if(obj == null) return false;
         if(obj.getClass() != this.getClass()) return false;
         else {
-            CityInfo other = (CityInfo)obj;
+            CityInfoDTO other = (CityInfoDTO)obj;
             if(this.id == null || other.getId() == null) return false;
             return other.getId().equals(this.id);
         }
