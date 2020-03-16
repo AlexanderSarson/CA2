@@ -131,6 +131,28 @@ public class PersonFacade {
             entityManager.close();
         }
     }
+    
+     public PersonDTO updatePerson(PersonDTO personDTO) throws PersonNotFoundException, MissingInputException {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        try {
+            Person person = em.find(Person.class, personDTO.getId());
+            if (person == null) {
+                throw new PersonNotFoundException();
+            } else {
+                em.getTransaction().begin();
+                person.setEmail(personDTO.getEmail());
+                person.setFirstName(personDTO.getFirstName());
+                person.setLastName(personDTO.getLastName());
+                em.merge(person);
+                em.getTransaction().commit();
+                return personDTO;
+            }
+        } catch (RollbackException e) {
+            throw new MissingInputException(MissingInputException.DEFAULT_PERSON_MESSAGE);
+        } finally {
+            em.close();
+        }
+    }
 
     /**
      * Generates a list of PersonDTOs from a list of Persons
@@ -145,5 +167,4 @@ public class PersonFacade {
         return dtos;
     }
 
-    // TODO(Benjamin): UPDATE Person
 }

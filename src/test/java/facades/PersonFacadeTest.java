@@ -28,6 +28,7 @@ public class PersonFacadeTest {
     private static EntityManagerFactory entityManagerFactory;
     private static PersonFacade personFacade;
     private static Person p1, p2;
+    private static PersonDTO pd1, pd2;
 
     public PersonFacadeTest() {}
     @BeforeAll
@@ -49,6 +50,8 @@ public class PersonFacadeTest {
         } finally {
             entityManager.close();
         }
+        pd1 = new PersonDTO(p1);
+        pd2 = new PersonDTO(p2);
     }
 
     @Test public void testGetAll() {
@@ -117,4 +120,28 @@ public class PersonFacadeTest {
            personFacade.deletePerson(id);
         });
     }
+    
+        @Test public void testUpdatePerson() throws PersonNotFoundException, MissingInputException{
+        String expected = "Mohammed";
+        pd1.setFirstName(expected);
+        String result = personFacade.updatePerson(pd1).getFirstName();
+        assertEquals(expected, result);
+             
+    }
+    
+    @Test public void testUpdatePerson_with_missing_input(){
+        pd1.setLastName(null);
+        assertThrows(MissingInputException.class, () -> {
+            personFacade.updatePerson(pd1);
+        });
+    }
+    
+    @Test public void testUpdatePerson_with_invalid_id() {
+        pd1.setId(1000);
+        assertThrows(PersonNotFoundException.class, () -> {
+            personFacade.updatePerson(pd1);
+        });
+        
+    }
+
 }
