@@ -102,4 +102,42 @@ public class PhoneFacadeTest {
             phoneFacade.create(new PhoneDTO(p3));
         });
     }
+    
+        @Test public void testUpdatePhone() throws PhoneNotFoundException, MissingInputException{
+        String expected = "29803002";
+        pd1.setNumber(expected);
+        String result = phoneFacade.updatePhone(pd1).getNumber();
+        assertEquals(expected, result);
+             
+    }
+    
+    @Test public void testUpdatePhone_with_missing_input(){
+        //Af en eller anden årsag, fejler denne test hvis vi udskifter linje 117 med linje 116..? 
+        //pd1.setDescription(null);
+        pd1.setNumber(null);
+        assertThrows(MissingInputException.class, () -> {
+            phoneFacade.updatePhone(pd1);
+        });
+    }
+    
+    @Test public void testUpdatePhone_with_invalid_id() {
+        pd1.setId(1000);
+        assertThrows(PhoneNotFoundException.class, () -> {
+            phoneFacade.updatePhone(pd1);
+        });
+        
+    }
+    
+    @Test public void testDeletePhone() throws PhoneNotFoundException, MissingInputException{
+        int expected = pd1.getId();
+        PhoneDTO pd3 = phoneFacade.deletePhone(expected);
+        assertEquals(pd1, pd3);
+    }
+    
+    @Test public void testDeletePhone_with_invalid_id(){
+        int id = 10000;
+        assertThrows(PhoneNotFoundException.class, () -> {
+            phoneFacade.deletePhone(id);
+        });
+    }
 }

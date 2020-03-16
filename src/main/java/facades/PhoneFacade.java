@@ -98,7 +98,43 @@ public class PhoneFacade {
         phoneDTO.setId(phone.getId());
         return phoneDTO;
     }
+ public PhoneDTO updatePhone (PhoneDTO phoneDTO) throws PhoneNotFoundException, MissingInputException {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        try {
+            Phone phone = em.find(Phone.class, phoneDTO.getId());
+            if (phone == null) {
+                throw new PhoneNotFoundException();
+            } else {
+                em.getTransaction().begin();
+                phone.setNumber(phoneDTO.getNumber());
+                phone.setDescription(phoneDTO.getDescription());
+                em.merge(phone);
+                em.getTransaction().commit();
+                return phoneDTO;
+            }
+        } catch (RollbackException e) {
+            throw new MissingInputException(MissingInputException.DEFAULT_PHONE_MESSAGE);
+        } finally {
+            em.close();
+        }
+    }
 
-    // TODO(Benjamin): DELETE Phone
-    // TODO(Benjamin): UPDATE Phone
+    public PhoneDTO deletePhone(int id) throws PhoneNotFoundException, MissingInputException {
+        EntityManager em = getEntityManager();
+        try {
+            Phone phone = em.find(Phone.class, id);
+            if (phone == null) {
+                throw new PhoneNotFoundException();
+            } else {
+                em.getTransaction().begin();
+                em.remove(phone);
+                em.getTransaction().commit();
+                return new PhoneDTO(phone);
+            }
+        } catch (RollbackException e) {
+            throw new MissingInputException(MissingInputException.DEFAULT_PHONE_MESSAGE);
+        } finally {
+            em.close();
+        }
+    }
 }
