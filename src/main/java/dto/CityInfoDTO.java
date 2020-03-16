@@ -28,7 +28,7 @@ public class CityInfoDTO {
         this.id = cityInfo.getId();
         this.zipCode = cityInfo.getZipCode();
         this.city = cityInfo.getCity();
-        this.addresses = cityInfo.convertToAddressListDTO();
+        this.addresses = AddressListDTO.convertToAddressListDTO(cityInfo.getAddresses());
     }
 
     

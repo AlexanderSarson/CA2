@@ -32,4 +32,10 @@ public class AddressListDTO {
         AddressList.forEach(AddressDTO -> Addresses.add(new Address(AddressDTO)));
         return Addresses;
     }
+    
+    public static AddressListDTO convertToAddressListDTO(List<Address> addresses){
+        AddressListDTO addressListDTO = new AddressListDTO();
+        addresses.forEach(address -> addressListDTO.addAddress(new AddressDTO(address)));
+        return addressListDTO;
+    }
 }
