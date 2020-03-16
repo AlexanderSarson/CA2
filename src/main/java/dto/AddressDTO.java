@@ -23,8 +23,6 @@ public class AddressDTO {
 
     private CityInfo cityInfo;
 
-    private List<Person> persons = new ArrayList<>();
-
     public AddressDTO(int id, String street, String additionalInfo) {
         this.id = id;
         this.street = street;
@@ -36,7 +34,6 @@ public class AddressDTO {
         this.street = address.getStreet();
         this.additionalInfo = address.getAdditionalInfoInfo();
         this.cityInfo = address.getCityInfo();
-        this.persons = address.getPersons();
     }
 
     public Integer getId() {
@@ -69,14 +66,6 @@ public class AddressDTO {
 
     public void setCityInfo(CityInfo cityInfo) {
         this.cityInfo = cityInfo;
-    }
-
-    public List<Person> getPersons() {
-        return persons;
-    }
-
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
     }
 
     @Override

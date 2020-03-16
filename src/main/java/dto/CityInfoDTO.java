@@ -16,8 +16,6 @@ public class CityInfoDTO {
     @Schema(required = true, example = "Lyngby")
     private String city;
 
-    private List<Address> addresses = new ArrayList<>();
-
     public CityInfoDTO(Integer id, Integer zipCode, String city) {
         this.id = id;
         this.zipCode = zipCode;
@@ -28,7 +26,6 @@ public class CityInfoDTO {
         this.id = cityInfo.getId();
         this.zipCode = cityInfo.getZipCode();
         this.city = cityInfo.getCity();
-        this.addresses = cityInfo.getAddresses();
     }
 
     
@@ -54,14 +51,6 @@ public class CityInfoDTO {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
     }
 
     @Override

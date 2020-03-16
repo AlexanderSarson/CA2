@@ -1,5 +1,7 @@
 package rest;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dto.PersonDTO;
 import facades.PersonFacade;
 import utils.EMF_Creator;
@@ -19,6 +21,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import rest.deserializationsettings.AnnotationExclusionStrategy;
 
 //Todo Remove or change relevant parts before ACTUAL use
 @OpenAPIDefinition(
@@ -54,6 +57,7 @@ public class PersonResource {
                 "ax2",
                 EMF_Creator.Strategy.CREATE);
     private static final PersonFacade FACADE =  PersonFacade.getPersonFacade(EMF);
+    private static final Gson GSON = new GsonBuilder().setExclusionStrategies(new AnnotationExclusionStrategy()).create();
         
     @Operation(summary = "Get all Persons from database",
             tags = {"person"},
@@ -64,11 +68,11 @@ public class PersonResource {
                 @ApiResponse(responseCode = "404", description = "Persons not found")})
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<PersonDTO> getAllPersonsFromDatabase() {
+    public String getAllPersonsFromDatabase() {
         List<PersonDTO> list = new ArrayList<>();
         list.add(new PersonDTO(1, "email@example.com", "Jens", "Sorensen"));
         list.add(new PersonDTO(2, "email2@example.com", "Frederik", "Sorensen"));
-        return list;
+        return GSON.toJson(list);
     }
     
 

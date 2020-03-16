@@ -46,7 +46,6 @@ public class CityInfo implements Serializable {
         this.id = cityInfoDTO.getId();
         this.zipCode = cityInfoDTO.getZipCode();
         this.city = cityInfoDTO.getCity();
-        this.addresses = cityInfoDTO.getAddresses();
     }
 
     public Integer getId() {

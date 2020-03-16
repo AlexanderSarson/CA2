@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.ArrayList;
 import java.util.List;
+import rest.deserializationsettings.Exclude;
 
 @Schema(name = "HobbyDTO")
 public class HobbyDTO {
@@ -15,8 +16,6 @@ public class HobbyDTO {
     private String name;
     @Schema(example = "All we do is play chess")
     private String description;
-
-    private List<Person> persons = new ArrayList<>();
 
     public HobbyDTO(Integer id, String name, String description) {
         this.id = id;
@@ -28,7 +27,6 @@ public class HobbyDTO {
         this.id = hobby.getId();
         this.name = hobby.getName();
         this.description = hobby.getDescription();
-        this.persons = hobby.getPersons();
     }
 
     public Integer getId() {
@@ -53,14 +51,6 @@ public class HobbyDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Person> getPersons() {
-        return persons;
-    }
-
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
     }
 
     @Override
