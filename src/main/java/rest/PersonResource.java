@@ -3,6 +3,8 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dto.PersonDTO;
+import exception.MissingInputException;
+import exception.PersonNotFoundException;
 import facades.PersonFacade;
 import utils.EMF_Creator;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -23,6 +25,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import rest.deserializationsettings.AnnotationExclusionStrategy;
 
@@ -68,15 +71,22 @@ public class PersonResource {
                 @ApiResponse(
                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
                 @ApiResponse(responseCode = "200", description = "The Requested person information"),
-                @ApiResponse(responseCode = "404", description = "Person not found")})
+                @ApiResponse(responseCode = "404", description = "No person found with that phone number")})
     @Path("/phone/{phone}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
     public List<PersonDTO> getPersonByPhoneNumber(@PathParam("phone") String phone) {
-        List<PersonDTO> list = new ArrayList<>();
-        list.add(new PersonDTO(1, "email@example.com", "Jens", "Sorensen"));
-        return list;
+        List<PersonDTO> persons;
+        try{
+            persons =  FACADE.getByPhoneNumber(phone);
+            if(persons.isEmpty()){
+                throw new WebApplicationException("No person found with that phone number", 404);
+            }
+        } catch (PersonNotFoundException p){
+            throw new WebApplicationException("No person found with that phone number", 404);
+        }
+        return persons;
     }
     
     @Operation(summary = "Get all persons with a given hobby",
@@ -85,16 +95,22 @@ public class PersonResource {
                 @ApiResponse(
                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
                 @ApiResponse(responseCode = "200", description = "The Requested persons information"),
-                @ApiResponse(responseCode = "404", description = "Persons not found")})
+                @ApiResponse(responseCode = "404", description = "No persons found with that hobby")})
     @Path("/hobby/{hobby}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
     public List<PersonDTO> getPersonsByHobby(@PathParam("hobby") String hobby) {
-        List<PersonDTO> list = new ArrayList<>();
-        list.add(new PersonDTO(1, "email@example.com", "Jens", "Sorensen"));
-        list.add(new PersonDTO(2, "email@example.com", "Frede", "Ferie"));
-        return list;
+        List<PersonDTO> persons;
+        try{
+            persons =  FACADE.getByHobby(hobby);
+            if(persons.isEmpty()){
+                throw new WebApplicationException("No persons found with that hobby", 404);
+            }
+        } catch (PersonNotFoundException p){
+            throw new WebApplicationException("No persons found with that hobby", 404);
+        }
+        return persons;
     }
     
     @Operation(summary = "Get all persons living in a given city (i.e. 2800 Lyngby)",
@@ -136,13 +152,22 @@ public class PersonResource {
             responses = {
                 @ApiResponse(
                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
-                @ApiResponse(responseCode = "200", description = "The person created"),
+                @ApiResponse(responseCode = "200", description = "The person is created"),
                 @ApiResponse(responseCode = "404", description = "Person not created")})
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
-    public PersonDTO getPersonsCountByHobby(PersonDTO personDTO) {
-        return personDTO;
+    public PersonDTO createPersonByDTO(PersonDTO personDTO) {
+        if(personDTO.getFirstName() == null || personDTO.getLastName() == null || personDTO.getEmail() == null){
+            throw new WebApplicationException("Person not created", 404);
+        }
+        PersonDTO dto;
+        try {
+            dto = FACADE.create(personDTO);
+        } catch (MissingInputException e){
+            throw new WebApplicationException("Person not created", 404);
+        }
+        return dto;
     }
     
  

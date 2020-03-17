@@ -1,4 +1,5 @@
 package facades;
+
 /*
  * author paepke
  * version 1.0
@@ -13,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-
 public class PersonFacade {
+
     private static PersonFacade instance;
     private static EntityManagerFactory entityManagerFactory;
 
@@ -39,6 +40,7 @@ public class PersonFacade {
 
     /**
      * Gets a Person by their associated email.
+     *
      * @param email the email to search for.
      * @return A PersonDTO of the Person found.
      * @throws PersonNotFoundException if no person was found, this will be thrown.
@@ -57,15 +59,15 @@ public class PersonFacade {
         }
     }
 
-
     /**
      * Gets a list of all Persons, as PersonDTOs
+     *
      * @return The list of PersonDTOs
      */
     public List<PersonDTO> getAll() {
         EntityManager entityManager = getEntityManager();
         try {
-            List<Person> persons = entityManager.createNamedQuery("Person.getAll",Person.class)
+            List<Person> persons = entityManager.createNamedQuery("Person.getAll", Person.class)
                     .getResultList();
             return toPersonDTOList(persons);
         } finally {
@@ -75,6 +77,7 @@ public class PersonFacade {
 
     /**
      * Get a PersonDTO from a given ID
+     *
      * @param id the id of the person to find.
      * @return a PersonDTO of the found person
      * @exception PersonNotFoundException if a person was not found, given ID
@@ -83,7 +86,7 @@ public class PersonFacade {
         EntityManager entityManager = getEntityManager();
         try {
             Person person = entityManager.find(Person.class, id);
-            if(person == null) {
+            if (person == null) {
                 throw new PersonNotFoundException();
             } else {
                 return new PersonDTO(person);
@@ -95,6 +98,7 @@ public class PersonFacade {
 
     /**
      * Persists the person.
+     *
      * @param personDTO The person to be persisted.
      * @return The persisted person, but with its ID assigned.
      */
@@ -122,7 +126,7 @@ public class PersonFacade {
                     .setParameter("id", id)
                     .executeUpdate();
             entityManager.getTransaction().commit();
-            if(rows < 1) {
+            if (rows < 1) {
                 // Nothing was deleted - handle as an error!
                 throw new PersonNotFoundException();
             }
@@ -131,8 +135,8 @@ public class PersonFacade {
             entityManager.close();
         }
     }
-    
-     public PersonDTO updatePerson(PersonDTO personDTO) throws PersonNotFoundException, MissingInputException {
+
+    public PersonDTO updatePerson(PersonDTO personDTO) throws PersonNotFoundException, MissingInputException {
         EntityManager em = entityManagerFactory.createEntityManager();
         try {
             Person person = em.find(Person.class, personDTO.getId());
@@ -154,8 +158,37 @@ public class PersonFacade {
         }
     }
 
+    public List<PersonDTO> getByPhoneNumber(String number) throws PersonNotFoundException {
+        EntityManager em = getEntityManager();
+        try {
+            List<Person> persons = em.createNamedQuery("Person.getByPhoneNumber", Person.class)
+                    .setParameter("number", number)
+                    .getResultList();
+            return toPersonDTOList(persons);
+        } catch (NoResultException e) {
+            throw new PersonNotFoundException();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<PersonDTO> getByHobby(String hobby) throws PersonNotFoundException {
+        EntityManager em = getEntityManager();
+        try {
+            List<Person> persons = em.createNamedQuery("Person.getByHobby", Person.class)
+                    .setParameter("hobby", hobby)
+                    .getResultList();
+            return toPersonDTOList(persons);
+        } catch (NoResultException e) {
+            throw new PersonNotFoundException();
+        } finally {
+            em.close();
+        }
+    }
+
     /**
      * Generates a list of PersonDTOs from a list of Persons
+     *
      * @param persons The list to be converted to DTOs
      * @return the list of generated PersonDTOs
      */
