@@ -185,7 +185,25 @@ public class PersonFacade {
             em.close();
         }
     }
+    
+    public int getPersonsCountByHobby (String hobby) throws PersonNotFoundException{
+        return getByHobby(hobby).size();
+    }
 
+    public List<PersonDTO> getByZipCode(int zipCode) throws PersonNotFoundException {
+        EntityManager em = getEntityManager();
+        try{
+            List<Person> persons = em.createNamedQuery("Person.getByCity", Person.class)
+                    .setParameter("zipCode", zipCode)
+                    .getResultList();
+            return toPersonDTOList(persons);
+        } catch (NoResultException e){
+            throw new PersonNotFoundException();
+        }finally{
+            em.close();
+        }
+    }
+    
     /**
      * Generates a list of PersonDTOs from a list of Persons
      *
