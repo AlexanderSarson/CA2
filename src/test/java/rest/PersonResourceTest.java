@@ -5,7 +5,7 @@
  */
 package rest;
 
-import dto.PersonDTO;
+import dto.*;
 import entities.Address;
 import entities.CityInfo;
 import entities.Hobby;
@@ -182,18 +182,17 @@ public class PersonResourceTest {
 
     @Test
     public void testCreatePerson_with_valid_information() {
-        Person person = new Person("Oscar", "Laurberg", "Testemail");
-        Address ad1 = new Address("street", "more info");
-        CityInfo ci1 = new CityInfo(2900, "city");
-        Hobby h1 = new Hobby("football", "i just play");
-        Phone ph1 = new Phone("50607080", "home number");
-        ad1.setCityInfo(ci1);
-        person.setAddress(ad1);
-        person.addHobby(h1);
-        person.addPhone(ph1);
+        PersonDTO personDTO = new PersonDTO(null,"Testemail", "Oscar", "Laurberg");
+        AddressDTO addressDTO = new AddressDTO(null,"street", "more info");
+        addressDTO.setCityInfo(new CityInfoDTO(null, 2900, "city"));
+        personDTO.setAddress(addressDTO);
+        HobbyDTO h1 = new HobbyDTO(null, "football", "i just play");
+        PhoneDTO ph1 = new PhoneDTO(null, "50607080", "home number");
+        personDTO.addHobby(h1);
+        personDTO.addPhone(ph1);
         given()
                 .contentType(ContentType.JSON)
-                .body(new PersonDTO(person))
+                .body(personDTO)
                 .when()
                 .post("/person")
                 .then()
@@ -203,38 +202,17 @@ public class PersonResourceTest {
 
     @Test
     public void testCreatePerson_with_invalid_information() {
-        String missingFirstName = "{\n"
-                + "  \"id\": 1,\n"
-                + "  \"email\": \"person@example.com\",\n"
-                + "  \"lastName\": \"Jensen\",\n"
-                + "  \"hobbies\": [\n"
-                + "    {\n"
-                + "      \"id\": 1,\n"
-                + "      \"name\": \"Chess\",\n"
-                + "      \"description\": \"All we do is play chess\"\n"
-                + "    }\n"
-                + "  ],\n"
-                + "  \"phones\": [\n"
-                + "    {\n"
-                + "      \"id\": 1,\n"
-                + "      \"number\": \"12\",\n"
-                + "      \"description\": \"Work\"\n"
-                + "    }\n"
-                + "  ],\n"
-                + "  \"address\": {\n"
-                + "    \"id\": 1,\n"
-                + "    \"street\": \"Jernbane Allé 7\",\n"
-                + "    \"additionalInfo\": \"The street along side the train station\",\n"
-                + "    \"cityInfo\": {\n"
-                + "      \"id\": 1,\n"
-                + "      \"zipCode\": 2800,\n"
-                + "      \"city\": \"Lyngby\"\n"
-                + "    }\n"
-                + "  }\n"
-                + "}";
+        PersonDTO personDTO = new PersonDTO(null,"Testemail", null, "Laurberg");
+        AddressDTO addressDTO = new AddressDTO(null,"street", "more info");
+        addressDTO.setCityInfo(new CityInfoDTO(null, 2900, "city"));
+        personDTO.setAddress(addressDTO);
+        HobbyDTO h1 = new HobbyDTO(null, "football", "i just play");
+        PhoneDTO ph1 = new PhoneDTO(null, "50607080", "home number");
+        personDTO.addHobby(h1);
+        personDTO.addPhone(ph1);
         given()
                 .contentType(ContentType.JSON)
-                .body(missingFirstName)
+                .body(personDTO)
                 .when()
                 .post("/person")
                 .then()

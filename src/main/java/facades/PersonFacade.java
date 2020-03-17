@@ -7,10 +7,12 @@ package facades;
 
 import dto.PersonDTO;
 import entities.Person;
+import entities.Phone;
 import exception.MissingInputException;
 import exception.PersonNotFoundException;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatException;
 import java.util.List;
 import javax.persistence.*;
 
@@ -118,19 +120,18 @@ public class PersonFacade {
         return personDTO;
     }
 
-    public int deletePerson(int id) throws PersonNotFoundException {
+    public PersonDTO deletePerson(int id) throws PersonNotFoundException {
         EntityManager entityManager = getEntityManager();
         try {
-            entityManager.getTransaction().begin();
-            int rows = entityManager.createNamedQuery("Person.deletePerson")
-                    .setParameter("id", id)
-                    .executeUpdate();
-            entityManager.getTransaction().commit();
-            if (rows < 1) {
-                // Nothing was deleted - handle as an error!
+            Person person = entityManager.find(Person.class, id);
+            if(person ==  null) {
                 throw new PersonNotFoundException();
+            } else {
+                entityManager.getTransaction().begin();
+                entityManager.remove(person);
+                entityManager.getTransaction().commit();
             }
-            return rows;
+            return new PersonDTO(person);
         } finally {
             entityManager.close();
         }
@@ -158,7 +159,10 @@ public class PersonFacade {
         }
     }
 
-    public List<PersonDTO> getByPhoneNumber(String number) throws PersonNotFoundException {
+    public List<PersonDTO> getByPhoneNumber(String number) throws PersonNotFoundException, IllegalArgumentException {
+        if(!Phone.isValidDanishNumber(number)) {
+            throw new PersonNotFoundException();
+        }
         EntityManager em = getEntityManager();
         try {
             List<Person> persons = em.createNamedQuery("Person.getByPhoneNumber", Person.class)

@@ -27,14 +27,14 @@ public class PersonDTO {
     @Schema(required = true, example = "Jensen")
     private String lastName;
 
-    private List<HobbyDTO> hobbies = new ArrayList<>();
-    private List<PhoneDTO> phones = new ArrayList<>();
+    private HobbyDTOList hobbies = new HobbyDTOList();
+    private PhoneDTOList phones = new PhoneDTOList();
     private AddressDTO address;
 
     public PersonDTO() {
     }
 
-    public PersonDTO(int id, String email, String firstName, String lastName) {
+    public PersonDTO(Integer id, String email, String firstName, String lastName) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -46,8 +46,8 @@ public class PersonDTO {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.email = person.getEmail();
-        this.hobbies = HobbyDTO.convertToHobbyDTO(person.getHobbies());
-        this.phones = PhoneDTO.convertToPhoneDTO(person.getPhones());
+        this.hobbies = new HobbyDTOList(person.getHobbies());
+        this.phones = new PhoneDTOList(person.getPhones());
         if (person.getAddress() != null) {
             this.address = new AddressDTO(person.getAddress());
         }
@@ -85,21 +85,26 @@ public class PersonDTO {
         this.lastName = lastName;
     }
 
-    public List<HobbyDTO> getHobbies() {
+    public HobbyDTOList getHobbies() {
         return hobbies;
     }
-
-    public void setHobbies(List<HobbyDTO> hobbies) {
+    public void setHobbies(HobbyDTOList hobbies) {
         this.hobbies = hobbies;
     }
+    public void addHobby(HobbyDTO hobbyDTO) {
+        this.hobbies.add(hobbyDTO);
+    }
 
-    public List<PhoneDTO> getPhones() {
+    public PhoneDTOList getPhones() {
         return phones;
     }
-
-    public void setPhones(List<PhoneDTO> phones) {
+    public void setPhones(PhoneDTOList phones) {
         this.phones = phones;
     }
+    public void addPhone(PhoneDTO phoneDTO) {
+        this.phones.add(phoneDTO);
+    }
+
 
     public AddressDTO getAddress() {
         return address;

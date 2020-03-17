@@ -22,7 +22,7 @@ public class Phone implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(nullable = false, unique = true)
     private String number;
     private String description;
@@ -85,5 +85,14 @@ public class Phone implements Serializable {
             Phone other = (Phone)obj;
             return other.getId() == this.id;
         }
+    }
+
+    public static boolean isValidDanishNumber(String input) {
+        return isValidPhoneNumber(input,8);
+    }
+
+    private static boolean isValidPhoneNumber(String input, int max) {
+        if(input.length() > max) return false;
+        return input.matches("[0-9]+");
     }
 }
