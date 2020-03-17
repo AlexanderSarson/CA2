@@ -6,6 +6,7 @@ package facades;
 
 import dto.PersonDTO;
 import entities.Person;
+import entities.Phone;
 import exception.MissingInputException;
 import exception.PersonNotFoundException;
 import utils.EMF_Creator;
@@ -22,8 +23,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
 
-
+@Disabled
 public class PersonFacadeTest {
     private static EntityManagerFactory entityManagerFactory;
     private static PersonFacade personFacade;
@@ -37,12 +39,15 @@ public class PersonFacadeTest {
         personFacade = PersonFacade.getPersonFacade(entityManagerFactory);
         p1 = new Person("Peter", "Pan", "peterPan@gmail.com");
         p2 = new Person("Lars", "Larsen", "larsLarsen@gmail.com");
+        Phone ph1 = new Phone("70809050", "home phone");
+        p1.addPhone(ph1);
     }
     @BeforeEach
     public void setUp() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
+            entityManager.createNamedQuery("Phone.deleteAllRows").executeUpdate();
             entityManager.createNamedQuery("Person.deleteAllRows").executeUpdate();
             entityManager.persist(p1);
             entityManager.persist(p2);
@@ -142,6 +147,20 @@ public class PersonFacadeTest {
             personFacade.updatePerson(pd1);
         });
         
+    }
+    @Disabled
+    @Test public void testGetPerson_with_valid_phoneNumber() throws PersonNotFoundException{
+        String phoneNumber = "70809050";
+        String expected = "Peter";
+        String result = personFacade.getByPhoneNumber(phoneNumber).get(0).getFirstName();
+        assertEquals(expected, result);
+    }
+    @Disabled
+    @Test public void testGetPerson_with_invalid_phoneNumber() throws PersonNotFoundException{
+        String phoneNumber = "ghjgfhgfh";
+        assertThrows(PersonNotFoundException.class, () -> {
+            personFacade.getByPhoneNumber(phoneNumber);
+        });
     }
 
 }

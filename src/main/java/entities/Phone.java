@@ -28,6 +28,7 @@ public class Phone implements Serializable {
     private String description;
 
     @ManyToOne
+    @JoinColumn(name="OWNER_ID")
     private Person owner;
 
     public Phone() {

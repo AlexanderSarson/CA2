@@ -20,7 +20,9 @@ import javax.persistence.*;
     @NamedQuery(name = "Person.deleteAllRows", query = "DELETE FROM Person"),
     @NamedQuery(name = "Person.getAll", query = "SELECT p FROM Person p"),
     @NamedQuery(name = "Person.getByEmail", query = "SELECT p FROM Person p WHERE p.email = :email"),
-    @NamedQuery(name = "Person.deletePerson", query = "DELETE FROM Person p WHERE p.id = :id")
+    @NamedQuery(name = "Person.deletePerson", query = "DELETE FROM Person p WHERE p.id = :id"),
+    @NamedQuery(name = "Person.getByPhoneNumber", query = "SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :number"),
+    @NamedQuery(name = "Person.getByHobby", query = "SELECT p FROM Person p JOIN p.hobbies h WHERE h.name = :hobby")
 })
 public class Person implements Serializable {
 
@@ -48,7 +50,7 @@ public class Person implements Serializable {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
     private List<Phone> phones = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Address address;
 
     public Person() {
