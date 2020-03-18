@@ -24,7 +24,7 @@ import javax.persistence.*;
     @NamedQuery(name = "Person.getByPhoneNumber", query = "SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :number"),
     @NamedQuery(name = "Person.getByHobbyCount", query = "SELECT COUNT(p) FROM Person p JOIN p.hobbies h WHERE h.name = :hobby"),
     @NamedQuery(name = "Person.getByHobby", query = "SELECT p FROM Person p JOIN p.hobbies h WHERE h.name = :hobby"),
-    @NamedQuery(name = "Person.getByZipCode", query = "SELECT p FROM Person p JOIN P.address a JOIN a.cityInfo c WHERE c.zipCode = :city")
+    @NamedQuery(name = "Person.getByZipCode", query = "SELECT p FROM Person p JOIN P.address a JOIN a.cityInfo c WHERE c.zipCode = :zipCode")
 })
 
 public class Person implements Serializable {

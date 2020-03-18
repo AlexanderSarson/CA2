@@ -120,16 +120,22 @@ public class PersonResource {
                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
                 @ApiResponse(responseCode = "200", description = "The Requested persons information"),
                 @ApiResponse(responseCode = "404", description = "Persons not found")})
-    @Path("/city/{city}")
+    @Path("/city/{zipCode}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<PersonDTO> getPersonsByCity(@PathParam("city") String city) {
-        List<PersonDTO> list = new ArrayList<>();
-        list.add(new PersonDTO(1, "email@example.com", "Jens", "Sorensen"));
-        list.add(new PersonDTO(2, "email@example.com", "Frede", "Ferie"));
-        list.add(new PersonDTO(3, "email@example.com", "Frede", "Ferie"));
-        return list;
+    public List<PersonDTO> getPersonsByCity(@PathParam("zipCode") int zipCode) throws PersonNotFoundException {
+        List<PersonDTO> persons;
+        try {
+            persons = FACADE.getByZipCode(zipCode);
+            if (persons.isEmpty()) {
+                throw new WebApplicationException("No persons found!", 404);
+
+            }
+        } catch (PersonNotFoundException e) {
+            throw new WebApplicationException("No persons found!", 404);
+        }
+        return persons;
     }
 
     @Operation(summary = "Get the count of people with a given hobby",
@@ -143,7 +149,8 @@ public class PersonResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
-    public long getPersonsCountByHobby(@PathParam("hobby") String hobby) {
+    public long getPersonsCountByHobby(@PathParam("hobby") String hobby
+    ) {
         Long count;
         try {
             count = FACADE.getPersonsCountByHobby(hobby);
@@ -153,32 +160,32 @@ public class PersonResource {
         } catch (PersonNotFoundException p) {
             throw new WebApplicationException("No persons found with that hobby", 404);
         }
-        
+
         return count;
     }
-    
+
     @Operation(summary = "Create a Person (with hobbies, phone, address etc.)",
-        tags = {"person"},
-        responses = {
-            @ApiResponse(
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
-            @ApiResponse(responseCode = "200", description = "The person is created"),
-            @ApiResponse(responseCode = "404", description = "Person not created")})
-        @POST
-        @Produces({MediaType.APPLICATION_JSON})
-        @Consumes(MediaType.APPLICATION_JSON)
-        public PersonDTO createPersonByDTO(PersonDTO personDTO) {
-        if(personDTO.getFirstName() == null || personDTO.getLastName() == null || personDTO.getEmail() == null){
+            tags = {"person"},
+            responses = {
+                @ApiResponse(
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
+                @ApiResponse(responseCode = "200", description = "The person is created"),
+                @ApiResponse(responseCode = "404", description = "Person not created")})
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_JSON)
+    public PersonDTO createPersonByDTO(PersonDTO personDTO
+    ) {
+        if (personDTO.getFirstName() == null || personDTO.getLastName() == null || personDTO.getEmail() == null) {
             throw new WebApplicationException("Person not created", 404);
         }
         PersonDTO dto;
         try {
             dto = FACADE.create(personDTO);
-        } catch (MissingInputException e){
+        } catch (MissingInputException e) {
             throw new WebApplicationException("Person not created", 404);
         }
         return dto;
     }
-    
- 
+
 }
