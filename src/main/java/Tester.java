@@ -26,7 +26,7 @@ public class Tester {
         Phone phone = new Phone("11111111", "Work");
         phoneFacade.create(new PhoneDTO(phone));
 
-        CityInfo cityInfo = new CityInfo(2000,"Test");
+        CityInfo cityInfo = new CityInfo(2000,"Valby");
         Address address = new Address("Langgade", "Extra");
         address.setCityInfo(cityInfo);
 
@@ -52,7 +52,7 @@ public class Tester {
         Phone p1 = new Phone("11111111", "Work");
         Phone p2 = new Phone("22222222", "Private");
 
-        CityInfo cityInfo = new CityInfo(1111, "Valby");
+        CityInfo cityInfo = new CityInfo(2000, "Valby");
         Address address = new Address("Langgade", "Extra");
         address.setCityInfo(cityInfo);
 

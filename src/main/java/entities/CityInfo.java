@@ -31,7 +31,7 @@ public class CityInfo implements Serializable {
     @Column(nullable = false)
     private String city;
 
-    @OneToMany(mappedBy = "cityInfo", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "cityInfo", cascade = {CascadeType.ALL})
     private List<Address> addresses = new ArrayList<>();
 
     public CityInfo() {

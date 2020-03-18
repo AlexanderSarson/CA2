@@ -108,7 +108,7 @@ public class PersonFacade {
         Person person = new Person(personDTO);
         try {
             entityManager.getTransaction().begin();
-            preCreateCheck(entityManager, person);
+            preCreateCheck(entityManager,person);
             entityManager.persist(person);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
@@ -116,16 +116,69 @@ public class PersonFacade {
         } finally {
             entityManager.close();
         }
-        personDTO.setId(person.getId());
-        return personDTO;
+        return new PersonDTO(person);
     }
 
     private void preCreateCheck(EntityManager entityManager, Person person) {
-        List<Hobby> hobbiesToBeAdded = PersistenceChecker.filterDuplicateHobbies(entityManager, person);
-        person.setHobbies(hobbiesToBeAdded);
+        List<Hobby> completeHobbyList = new ArrayList<>();
+        person.getHobbies().forEach(hobby -> {
+            try {
+                Hobby found = entityManager.createNamedQuery("Hobby.findByName", Hobby.class)
+                        .setParameter("name",hobby.getName())
+                        .getSingleResult();
+                completeHobbyList.add(found);
+            } catch(NoResultException e) {
+                entityManager.persist(hobby);
+                completeHobbyList.add(hobby);
+            }
+        });
+        person.setHobbies(completeHobbyList);
 
-        List<Phone> phonesToBeAdded = PersistenceChecker.filterDuplicatePhones(entityManager, person);
-        person.setPhones(phonesToBeAdded);
+        List<Phone> completePhoneList = new ArrayList<>();
+        person.getPhones().forEach(phone -> {
+           try {
+               Phone found = entityManager.createNamedQuery("Phone.getByNumber", Phone.class)
+                       .setParameter("number", phone.getNumber())
+                       .getSingleResult();
+               completePhoneList.add(found);
+           } catch (NoResultException e) {
+               entityManager.persist(phone);
+               completePhoneList.add(phone);
+           }
+        });
+        person.setPhones(completePhoneList);
+
+        // Check the CityInfo first
+        CityInfo cityInfo = person.getAddress().getCityInfo();
+        CityInfo foundCityInfo = null;
+        try {
+            foundCityInfo = entityManager.createNamedQuery("CityInfo.getByZipCode", CityInfo.class)
+                    .setParameter("zipCode",cityInfo.getZipCode())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            entityManager.persist(cityInfo);
+            foundCityInfo = cityInfo;
+        }
+        entityManager.getTransaction().commit();
+        Address address = person.getAddress();
+        address.setCityInfo(foundCityInfo);
+        entityManager.getTransaction().begin();
+        Address foundAddress = null;
+        try {
+            List<Address> multipleFound  = entityManager.createNamedQuery("Address.getByStreetAndCityInfoId", Address.class)
+                    .setParameter("street",address.getStreet())
+                    .setParameter("id",foundCityInfo.getId()).getResultList();
+            if(multipleFound == null || multipleFound.isEmpty()) {
+                entityManager.persist(address);
+            } else {
+                foundAddress = multipleFound.get(0);
+            }
+        } catch (NoResultException e) {
+            entityManager.persist(address);
+            foundAddress = address;
+        }
+        person.setAddress(foundAddress);
+        person.getAddress().setCityInfo(foundCityInfo);
     }
 
     public PersonDTO deletePerson(int id) throws PersonNotFoundException {
