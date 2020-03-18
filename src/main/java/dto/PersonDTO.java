@@ -34,7 +34,7 @@ public class PersonDTO {
     public PersonDTO() {
     }
 
-    public PersonDTO(int id, String email, String firstName, String lastName) {
+    public PersonDTO(Integer id, String email, String firstName, String lastName) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -125,4 +125,11 @@ public class PersonDTO {
         }
     }
 
+    public void addHobby(HobbyDTO h1) {
+        hobbies.add(h1);
+    }
+
+    public void addPhone(PhoneDTO ph1) {
+        phones.add(ph1);
+    }
 }

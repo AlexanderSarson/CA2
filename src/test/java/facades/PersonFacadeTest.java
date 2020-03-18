@@ -25,7 +25,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Disabled;
 
-@Disabled
 public class PersonFacadeTest {
     private static EntityManagerFactory entityManagerFactory;
     private static PersonFacade personFacade;
@@ -59,108 +58,131 @@ public class PersonFacadeTest {
         pd2 = new PersonDTO(p2);
     }
 
-    @Test public void testGetAll() {
+    @Test
+    public void testGetAll() {
         List<PersonDTO> dtos = personFacade.getAll();
         assertTrue(dtos.contains(new PersonDTO(p1)));
         assertTrue(dtos.contains(new PersonDTO(p2)));
     }
-    @Test public void testGetByEmail_with_invalid_email() {
+
+    @Test
+    public void testGetByEmail_with_invalid_email() {
         String email = "this is not an email";
         assertThrows(PersonNotFoundException.class, () -> {
            personFacade.getByEmail(email);
         });
     }
-    @Test public void testGetByEmail_with_valid_email() throws PersonNotFoundException {
+
+    @Test
+    public void testGetByEmail_with_valid_email() throws PersonNotFoundException {
         String email = "peterPan@gmail.com";
         PersonDTO dto = personFacade.getByEmail(email);
         assertEquals("Peter", dto.getFirstName());
         assertEquals("Pan", dto.getLastName());
         assertEquals(email, dto.getEmail());
     }
-    @Test public void testGetById_with_valid_id() throws PersonNotFoundException {
+
+    @Test
+    public void testGetById_with_valid_id() throws PersonNotFoundException {
         int id = p1.getId();
         PersonDTO expected = new PersonDTO(p1);
         PersonDTO result = personFacade.getById(id);
         assertEquals(expected, result);
     }
-    @Test public void testGetById_with_invalid_id() {
+
+    @Test
+    public void testGetById_with_invalid_id() {
         int id = 1000;
         assertThrows(PersonNotFoundException.class, () -> {
             personFacade.getById(id);
         });
     }
-    @Test public void testCreatePerson_with_valid_input() throws MissingInputException {
+
+    @Test
+    public void testCreatePerson_with_valid_input() throws MissingInputException {
         Person p3 = new Person("Benny", "Hill", "bHill@outlook.com");
         PersonDTO result = personFacade.create(new PersonDTO(p3));
         // NOTE(Benjamin): This ID must be calculated during runtime, else we have no idea what it will be.
         Integer nextId = Math.max(p1.getId(),p2.getId()) + 1;
         assertEquals(nextId, result.getId());
     }
-    @Test public void testCreatePerson_with_invalid_firstName() {
+
+    @Test
+    public void testCreatePerson_with_invalid_firstName() {
         Person p3 = new Person(null, "Hill", "hill@outlook.com");
         assertThrows(MissingInputException.class, () -> {
            personFacade.create(new PersonDTO(p3));
         });
     }
-    @Test public void testCreatePerson_with_invalid_lastName() {
+
+    @Test
+    public void testCreatePerson_with_invalid_lastName() {
         Person p3 = new Person("Peter", null, "p@outlook.com");
         assertThrows(MissingInputException.class, () -> {
             personFacade.create(new PersonDTO(p3));
         });
     }
-    @Test public void testCreatePerson_with_invalid_email() {
+
+    @Test
+    public void testCreatePerson_with_invalid_email() {
         Person p3 = new Person("Peter", "Nielsen", null);
         assertThrows(MissingInputException.class, () ->  {
             personFacade.create(new PersonDTO(p3));
         });
     }
-    @Test public void testDeletePerson_with_valid_id() throws PersonNotFoundException {
-        int id = p1.getId();
-        int rowsAffected = personFacade.deletePerson(id);
-        assertEquals(1, rowsAffected);;
+
+    @Test
+    public void testDeletePerson_with_valid_id() throws PersonNotFoundException {
+        Integer id = p1.getId();
+        PersonDTO person = personFacade.deletePerson(id);
+        assertEquals(id, person.getId());;
     }
-    @Test public void testDeletePerson_with_invalid_id() {
+
+    @Test
+    public void testDeletePerson_with_invalid_id() {
         int id = 1000;
         assertThrows(PersonNotFoundException.class, () ->  {
            personFacade.deletePerson(id);
         });
     }
     
-        @Test public void testUpdatePerson() throws PersonNotFoundException, MissingInputException{
+    @Test
+    public void testUpdatePerson() throws PersonNotFoundException, MissingInputException{
         String expected = "Mohammed";
         pd1.setFirstName(expected);
         String result = personFacade.updatePerson(pd1).getFirstName();
         assertEquals(expected, result);
-             
     }
     
-    @Test public void testUpdatePerson_with_missing_input(){
+    @Test
+    public void testUpdatePerson_with_missing_input(){
         pd1.setLastName(null);
         assertThrows(MissingInputException.class, () -> {
             personFacade.updatePerson(pd1);
         });
     }
-    
-    @Test public void testUpdatePerson_with_invalid_id() {
+
+    @Test
+    public void testUpdatePerson_with_invalid_id() {
         pd1.setId(1000);
         assertThrows(PersonNotFoundException.class, () -> {
             personFacade.updatePerson(pd1);
         });
-        
     }
-    @Disabled
-    @Test public void testGetPerson_with_valid_phoneNumber() throws PersonNotFoundException{
+
+    @Test
+    public void testGetPerson_with_valid_phoneNumber() throws PersonNotFoundException{
         String phoneNumber = "70809050";
         String expected = "Peter";
         String result = personFacade.getByPhoneNumber(phoneNumber).get(0).getFirstName();
         assertEquals(expected, result);
     }
-    @Disabled
-    @Test public void testGetPerson_with_invalid_phoneNumber() throws PersonNotFoundException{
+
+    @Test
+    public void testGetPerson_with_invalid_phoneNumber() throws PersonNotFoundException {
         String phoneNumber = "ghjgfhgfh";
         assertThrows(PersonNotFoundException.class, () -> {
             personFacade.getByPhoneNumber(phoneNumber);
         });
     }
-
 }

@@ -22,7 +22,7 @@ public class AddressDTO {
     public AddressDTO() {
     }
 
-    public AddressDTO(int id, String street, String additionalInfo) {
+    public AddressDTO(Integer id, String street, String additionalInfo) {
         this.id = id;
         this.street = street;
         this.additionalInfo = additionalInfo;

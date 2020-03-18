@@ -40,7 +40,7 @@ public class Person implements Serializable {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinTable(
             name = "PersonHobby",
             joinColumns = {
@@ -50,10 +50,10 @@ public class Person implements Serializable {
     )
     private List<Hobby> hobbies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "owner", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private List<Phone> phones = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private Address address;
 
     public Person() {
@@ -72,7 +72,7 @@ public class Person implements Serializable {
         this.email = dto.getEmail();
         this.hobbies = HobbyDTO.convertToHobby(dto.getHobbies());
         this.phones = PhoneDTO.convertToPhone(dto.getPhones());
-        if (dto.getAddress() != null) {
+        if(dto.getAddress() != null) {
             this.address = new Address(dto.getAddress());
         }
     }

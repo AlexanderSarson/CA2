@@ -1,7 +1,9 @@
+import dto.HobbyDTO;
 import dto.PersonDTO;
 import entities.*;
 import exception.MissingInputException;
 import exception.PersonNotFoundException;
+import facades.HobbyFacade;
 import facades.PersonFacade;
 import utils.EMF_Creator;
 
@@ -13,6 +15,14 @@ public class Tester {
         EntityManagerFactory entityManagerFactory = EMF_Creator.createEntityManagerFactory(
                 EMF_Creator.DbSelector.DEV,
                 EMF_Creator.Strategy.DROP_AND_CREATE);
+
+        /* This will not work, currently, as we are trying to persist the same hobby again later
+        // Make sure this will work!
+        HobbyFacade hobbyFacade = HobbyFacade.getHobbyFacade(entityManagerFactory);
+        Hobby hobby = new Hobby("Chess", "We play chess");
+        hobbyFacade.create(new HobbyDTO(hobby));
+        */
+
         Person person = new Person("Peter", "Nielsen", "pNielsen@gmail.com");
         PersonFacade pf = PersonFacade.getPersonFacade(entityManagerFactory);
 
