@@ -1,5 +1,6 @@
 package parsing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,29 +13,15 @@ public class ZipCode {
     private String nr;
     private String navn;
     private String stormodtageradresser;
-    private List<Integer> bbox;
-    private List<Integer> visueltCenter;
-    private List<List<String>> kommuner;
+    private List<Double> bbox;
+    private List<Double> visueltCenter;
+    private List<kommuner> kommuner;
     private String ændret;
     private String geo_ændret;
-    private Integer geo_version;
+    private Double geo_version;
     private String dagi_id;
 
     public ZipCode() {
-    }
-
-    public ZipCode(String href, String nr, String navn, String stormodtageradresser, List<Integer> bbox, List<Integer> visueltCenter, List<List<String>> kommuner, String ændret, String geo_ændret, Integer geo_version, String dagi_id) {
-        this.href = href;
-        this.nr = nr;
-        this.navn = navn;
-        this.stormodtageradresser = stormodtageradresser;
-        this.bbox = bbox;
-        this.visueltCenter = visueltCenter;
-        this.kommuner = kommuner;
-        this.ændret = ændret;
-        this.geo_ændret = geo_ændret;
-        this.geo_version = geo_version;
-        this.dagi_id = dagi_id;
     }
 
     public String getHref() {
@@ -69,28 +56,20 @@ public class ZipCode {
         this.stormodtageradresser = stormodtageradresser;
     }
 
-    public List<Integer> getBbox() {
+    public List<Double> getBbox() {
         return bbox;
     }
 
-    public void setBbox(List<Integer> bbox) {
+    public void setBbox(List<Double> bbox) {
         this.bbox = bbox;
     }
 
-    public List<Integer> getVisueltCenter() {
+    public List<Double> getVisueltCenter() {
         return visueltCenter;
     }
 
-    public void setVisueltCenter(List<Integer> visueltCenter) {
+    public void setVisueltCenter(List<Double> visueltCenter) {
         this.visueltCenter = visueltCenter;
-    }
-
-    public List<List<String>> getKommuner() {
-        return kommuner;
-    }
-
-    public void setKommuner(List<List<String>> kommuner) {
-        this.kommuner = kommuner;
     }
 
     public String getÆndret() {
@@ -109,11 +88,11 @@ public class ZipCode {
         this.geo_ændret = geo_ændret;
     }
 
-    public Integer getGeo_version() {
+    public Double getGeo_version() {
         return geo_version;
     }
 
-    public void setGeo_version(Integer geo_version) {
+    public void setGeo_version(Double geo_version) {
         this.geo_version = geo_version;
     }
 
@@ -125,4 +104,18 @@ public class ZipCode {
         this.dagi_id = dagi_id;
     }
 
+    public List<kommuner> getKommuner() {
+        return kommuner;
+    }
+
+    public void setKommuner(List<kommuner> kommuner) {
+        this.kommuner = kommuner;
+    }
+
+    public static List<String> convertToZipCodeList(List<ZipCode> zipCodeList){
+        List<String> zipcodes = new ArrayList<>();
+        zipCodeList.forEach(zipcode -> zipcodes.add(zipcode.getNr()));
+        return zipcodes;
+    }
+    
 }

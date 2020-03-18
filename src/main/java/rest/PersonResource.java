@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import dto.PersonDTO;
 import exception.MissingInputException;
 import exception.PersonNotFoundException;
@@ -16,7 +17,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -150,27 +153,33 @@ public class PersonResource {
             responses = {
                 @ApiResponse(
                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
-                @ApiResponse(responseCode = "200", description = "The Requested persons information"),
-                @ApiResponse(responseCode = "404", description = "Persons not found")})
+                @ApiResponse(responseCode = "200", description = "The Requested zipcodes"),
+                @ApiResponse(responseCode = "404", description = "Zipcodes could not be fetched")})
     @Path("/city/all")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
-    public String getAllZipCodes() throws PersonNotFoundException, MalformedURLException, ProtocolException, IOException {
-
+    public List<String> getAllZipCodes() throws MalformedURLException, ProtocolException, IOException {
         URL url = new URL("https://dawa.aws.dk/postnumre");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Accept", "application/json;charset=UTF-8");
-        Scanner scan = new Scanner(con.getInputStream());
-        String jsonStr = null;
-        if (scan.hasNext()) {
-            jsonStr = scan.nextLine();
+        StringBuilder content;
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+        } catch (Exception e) {
+            throw new WebApplicationException("Zipcodes could not be fetched", 404);
+        } finally {
+            con.disconnect();
         }
-        scan.close();
-        List<ZipCode> zipCodes = GSON.fromJson(jsonStr, ZipCode.class);
-        return GSON.fromJson(jsonStr, ZipCode.class);
-
+        List<ZipCode> zipCodes = GSON.fromJson(content.toString(), new TypeToken<List<ZipCode>>() {
+        }.getType());
+        return ZipCode.convertToZipCodeList(zipCodes);
     }
 
     @Operation(summary = "Get the count of people with a given hobby",
