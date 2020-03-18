@@ -22,8 +22,9 @@ import javax.persistence.*;
     @NamedQuery(name = "Person.getByEmail", query = "SELECT p FROM Person p WHERE p.email = :email"),
     @NamedQuery(name = "Person.deletePerson", query = "DELETE FROM Person p WHERE p.id = :id"),
     @NamedQuery(name = "Person.getByPhoneNumber", query = "SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :number"),
+    @NamedQuery(name = "Person.getByHobbyCount", query = "SELECT COUNT(p) FROM Person p JOIN p.hobbies h WHERE h.name = :hobby"),
     @NamedQuery(name = "Person.getByHobby", query = "SELECT p FROM Person p JOIN p.hobbies h WHERE h.name = :hobby"),
-    @NamedQuery(name = "Person.getByCity", query = "SELECT p FROM Person p JOIN P.address a JOIN a.cityInfo c WHERE c.zipCode = :city")
+    @NamedQuery(name = "Person.getByZipCode", query = "SELECT p FROM Person p JOIN P.address a JOIN a.cityInfo c WHERE c.zipCode = :city")
 })
 
 public class Person implements Serializable {

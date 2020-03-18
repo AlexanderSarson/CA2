@@ -1,6 +1,7 @@
 import dto.PersonDTO;
 import entities.*;
 import exception.MissingInputException;
+import exception.PersonNotFoundException;
 import facades.PersonFacade;
 import utils.EMF_Creator;
 
@@ -8,11 +9,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 public class Tester {
-    public static void main(String[] args) throws MissingInputException {
+    public static void main(String[] args) throws MissingInputException, PersonNotFoundException {
         EntityManagerFactory entityManagerFactory = EMF_Creator.createEntityManagerFactory(
                 EMF_Creator.DbSelector.DEV,
                 EMF_Creator.Strategy.DROP_AND_CREATE);
         Person person = new Person("Peter", "Nielsen", "pNielsen@gmail.com");
+        PersonFacade pf = PersonFacade.getPersonFacade(entityManagerFactory);
 
         Hobby h1 = new Hobby("Chess","We play chess");
         Hobby h2 = new Hobby("Chess Boxing", "Yes, it is what is sounds like");
@@ -38,5 +40,6 @@ public class Tester {
         entityManager.persist(person);
         entityManager.getTransaction().commit();
         entityManager.close();
+        System.out.println(pf.getPersonsCountByHobby("Chess"));
     }
 }

@@ -19,7 +19,7 @@ public class PersonFacade {
     private static PersonFacade instance;
     private static EntityManagerFactory entityManagerFactory;
 
-    private PersonFacade() {
+    public PersonFacade() {
     }
 
     /**
@@ -186,14 +186,24 @@ public class PersonFacade {
         }
     }
     
-    public int getPersonsCountByHobby (String hobby) throws PersonNotFoundException{
-        return getByHobby(hobby).size();
+    public long getPersonsCountByHobby (String hobby) throws PersonNotFoundException{
+        EntityManager em = getEntityManager();
+        try{
+            long personCount = (long) em.createNamedQuery("Person.getByHobbyCount")
+                    .setParameter("hobby", hobby)
+                    .getSingleResult();
+            return personCount;
+        } catch (NoResultException e){
+            throw new PersonNotFoundException();
+        }finally{
+            em.close();
+        }
     }
 
     public List<PersonDTO> getByZipCode(int zipCode) throws PersonNotFoundException {
         EntityManager em = getEntityManager();
         try{
-            List<Person> persons = em.createNamedQuery("Person.getByCity", Person.class)
+            List<Person> persons = em.createNamedQuery("Person.getByZipCode", Person.class)
                     .setParameter("zipCode", zipCode)
                     .getResultList();
             return toPersonDTOList(persons);
