@@ -1,16 +1,16 @@
 package dto;
 
 import entities.Address;
-import entities.CityInfo;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author paepke
  * @version 1.0
  */
-@Schema(name = "AddressDTO")
+@Schema(name = "Address")
 public class AddressDTO {
-    @Schema(required = true, example = "1")
+    @Hidden
     private Integer id;
     @Schema(required = true, example ="Jernbane Allé 7")
     private String street;

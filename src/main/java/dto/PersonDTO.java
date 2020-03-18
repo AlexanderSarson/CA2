@@ -6,6 +6,7 @@
 package dto;
 
 import entities.Person;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.ArrayList;
@@ -15,10 +16,10 @@ import java.util.List;
  *
  * @author root
  */
-@Schema(name = "PersonDTO")
+@Schema(name = "Person")
 public class PersonDTO {
 
-    @Schema(required = false, example = "1")
+    @Hidden
     private Integer id;
     @Schema(required = true, example = "person@example.com")
     private String email;

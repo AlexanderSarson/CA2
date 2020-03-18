@@ -1,13 +1,14 @@
 package dto;
 
 import entities.Phone;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(name = "PhoneDTO")
+@Schema(name = "Phone")
 public class PhoneDTO {
-    @Schema(required = true, example = "1")
+    @Hidden
     private Integer id;
     @Schema(required = true, example = "12 34 56 78")
     private String number;

@@ -1,11 +1,12 @@
 package dto;
 
 import entities.CityInfo;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(name = "CityInfoDTO")
+@Schema(name = "CityInfo")
 public class CityInfoDTO {
-    @Schema(required = true, example = "1")
+    @Hidden
     private Integer id;
     @Schema(required = true, example = "2800")
     private Integer zipCode;
