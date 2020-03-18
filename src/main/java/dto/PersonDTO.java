@@ -27,8 +27,8 @@ public class PersonDTO {
     @Schema(required = true, example = "Jensen")
     private String lastName;
 
-    private HobbyDTOList hobbies = new HobbyDTOList();
-    private PhoneDTOList phones = new PhoneDTOList();
+    private List<HobbyDTO> hobbies = new ArrayList<>();
+    private List<PhoneDTO> phones = new ArrayList<>();
     private AddressDTO address;
 
     public PersonDTO() {
@@ -46,20 +46,8 @@ public class PersonDTO {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.email = person.getEmail();
-        this.hobbies = new HobbyDTOList(person.getHobbies());
-        this.phones = new PhoneDTOList(person.getPhones());
-        if (person.getAddress() != null) {
-            this.address = new AddressDTO(person.getAddress());
-        }
-    }
-
-    public PersonDTO(Person person, HobbyDTOList hobbies, PhoneDTOList phones){
-        this.id = person.getId();
-        this.firstName = person.getFirstName();
-        this.lastName = person.getLastName();
-        this.email = person.getEmail();
-        this.hobbies = hobbies;
-        this.phones = phones;
+        this.hobbies = HobbyDTO.convertToHobbyDTO(person.getHobbies());
+        this.phones = PhoneDTO.convertToPhoneDTO(person.getPhones());
         if (person.getAddress() != null) {
             this.address = new AddressDTO(person.getAddress());
         }
@@ -97,26 +85,21 @@ public class PersonDTO {
         this.lastName = lastName;
     }
 
-    public HobbyDTOList getHobbies() {
+    public List<HobbyDTO> getHobbies() {
         return hobbies;
     }
-    public void setHobbies(HobbyDTOList hobbies) {
+
+    public void setHobbies(List<HobbyDTO> hobbies) {
         this.hobbies = hobbies;
     }
-    public void addHobby(HobbyDTO hobbyDTO) {
-        this.hobbies.add(hobbyDTO);
-    }
 
-    public PhoneDTOList getPhones() {
+    public List<PhoneDTO> getPhones() {
         return phones;
     }
-    public void setPhones(PhoneDTOList phones) {
+
+    public void setPhones(List<PhoneDTO> phones) {
         this.phones = phones;
     }
-    public void addPhone(PhoneDTO phoneDTO) {
-        this.phones.add(phoneDTO);
-    }
-
 
     public AddressDTO getAddress() {
         return address;
@@ -142,4 +125,11 @@ public class PersonDTO {
         }
     }
 
+    public void addHobby(HobbyDTO h1) {
+        hobbies.add(h1);
+    }
+
+    public void addPhone(PhoneDTO ph1) {
+        phones.add(ph1);
+    }
 }
