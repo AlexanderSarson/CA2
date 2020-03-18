@@ -181,7 +181,7 @@ public class PersonFacadeTest {
     @Test
     public void testGetPerson_with_invalid_phoneNumber() throws PersonNotFoundException {
         String phoneNumber = "ghjgfhgfh";
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(PersonNotFoundException.class, () -> {
             personFacade.getByPhoneNumber(phoneNumber);
         });
     }
