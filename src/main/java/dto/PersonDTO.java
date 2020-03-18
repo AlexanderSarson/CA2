@@ -18,7 +18,7 @@ import java.util.List;
 @Schema(name = "PersonDTO")
 public class PersonDTO {
 
-    @Schema(required = true, example = "1")
+    @Schema(required = false, example = "1")
     private Integer id;
     @Schema(required = true, example = "person@example.com")
     private String email;
@@ -53,6 +53,8 @@ public class PersonDTO {
         }
     }
 
+    
+    
     public Integer getId() {
         return id;
     }
