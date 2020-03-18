@@ -16,8 +16,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -27,6 +33,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import parsing.ZipCode;
 import rest.deserializationsettings.AnnotationExclusionStrategy;
 
 //Todo Remove or change relevant parts before ACTUAL use
@@ -136,6 +143,34 @@ public class PersonResource {
             throw new WebApplicationException("No persons found with that zipcode!", 404);
         }
         return persons;
+    }
+
+    @Operation(summary = "Get all zipcodes",
+            tags = {"person"},
+            responses = {
+                @ApiResponse(
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
+                @ApiResponse(responseCode = "200", description = "The Requested persons information"),
+                @ApiResponse(responseCode = "404", description = "Persons not found")})
+    @Path("/city/all")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String getAllZipCodes() throws PersonNotFoundException, MalformedURLException, ProtocolException, IOException {
+
+        URL url = new URL("https://dawa.aws.dk/postnumre");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Accept", "application/json;charset=UTF-8");
+        Scanner scan = new Scanner(con.getInputStream());
+        String jsonStr = null;
+        if (scan.hasNext()) {
+            jsonStr = scan.nextLine();
+        }
+        scan.close();
+        List<ZipCode> zipCodes = GSON.fromJson(jsonStr, ZipCode.class);
+        return GSON.fromJson(jsonStr, ZipCode.class);
+
     }
 
     @Operation(summary = "Get the count of people with a given hobby",
