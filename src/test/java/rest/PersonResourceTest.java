@@ -26,7 +26,11 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasValue;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -182,8 +186,8 @@ public class PersonResourceTest {
 
     @Test
     public void testCreatePerson_with_valid_information() {
-        PersonDTO personDTO = new PersonDTO(null,"Testemail", "Oscar", "Laurberg");
-        AddressDTO addressDTO = new AddressDTO(null,"street", "more info");
+        PersonDTO personDTO = new PersonDTO(null, "Testemail", "Oscar", "Laurberg");
+        AddressDTO addressDTO = new AddressDTO(null, "street", "more info");
         addressDTO.setCityInfo(new CityInfoDTO(null, 2900, "city"));
         personDTO.setAddress(addressDTO);
         HobbyDTO h1 = new HobbyDTO(null, "football", "i just play");
@@ -202,8 +206,8 @@ public class PersonResourceTest {
 
     @Test
     public void testCreatePerson_with_invalid_information() {
-        PersonDTO personDTO = new PersonDTO(null,"Testemail", null, "Laurberg");
-        AddressDTO addressDTO = new AddressDTO(null,"street", "more info");
+        PersonDTO personDTO = new PersonDTO(null, "Testemail", null, "Laurberg");
+        AddressDTO addressDTO = new AddressDTO(null, "street", "more info");
         addressDTO.setCityInfo(new CityInfoDTO(null, 2900, "city"));
         personDTO.setAddress(addressDTO);
         HobbyDTO h1 = new HobbyDTO(null, "football", "i just play");
@@ -219,4 +223,62 @@ public class PersonResourceTest {
                 .body("message", equalTo("Person not created"));
     }
 
+    /**
+     * Test of getPersonsCountByHobby, of Class PersonRessource
+     *
+     */
+    @Test
+    public void testGetPersonsCountByHobby_with_existing_hobby() {
+        String hobby = "Programming";
+        String expected = "1";
+        given()
+                .contentType(ContentType.JSON)
+                .get("person/hobby/count/" + hobby)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body(equalTo(expected));
+
+    }
+
+    @Test
+    public void testGetPersonsCountByHobby_with_non_existing_hobby() {
+        String hobby = "Kite Flying";
+        given()
+                .contentType(ContentType.JSON)
+                .get("person/hobby/count/" + hobby)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND_404.getStatusCode())
+                .body("message", equalTo("No persons found with that hobby"));
+
+    }
+
+    @Test
+    public void testGetPersonsByZipCode() {
+        int zipCode = 2880;
+        String expected = "Peter";
+        given()
+                .contentType(ContentType.JSON)
+                .get("person/city/" + zipCode)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("firstName", contains(expected));
+    }
+
+    @Test
+    public void testGetPersonsByZipCode_with_non_existing_zip() {
+        int zipCode = 2131232;
+        given()
+                .contentType(ContentType.JSON)
+                .get("person/city/" + zipCode)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND_404.getStatusCode())
+                .body("message", equalTo("No persons found with that zipcode!"));
+              
+                
+         
+    }
 }

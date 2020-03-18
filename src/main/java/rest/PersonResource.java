@@ -129,11 +129,11 @@ public class PersonResource {
         try {
             persons = FACADE.getByZipCode(zipCode);
             if (persons.isEmpty()) {
-                throw new WebApplicationException("No persons found!", 404);
+                throw new WebApplicationException("No persons found with that zipcode!", 404);
 
             }
         } catch (PersonNotFoundException e) {
-            throw new WebApplicationException("No persons found!", 404);
+            throw new WebApplicationException("No persons found with that zipcode!", 404);
         }
         return persons;
     }
