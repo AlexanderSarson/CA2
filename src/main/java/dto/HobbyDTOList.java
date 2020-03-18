@@ -11,9 +11,11 @@ public class HobbyDTOList {
     public HobbyDTOList() {}
 
     public HobbyDTOList(List<Hobby> hobbies) {
-        hobbies.forEach(hobby -> {
-            hobbyList.add(new HobbyDTO(hobby));
-        });
+        List<HobbyDTO> dtos = new ArrayList<>();
+        for(Hobby hobby : hobbies) {
+            dtos.add(new HobbyDTO(hobby.getId(),hobby.getName(),hobby.getDescription()));
+        }
+        this.hobbyList = dtos;
     }
 
     public List<Hobby> convertToHobbyList() {

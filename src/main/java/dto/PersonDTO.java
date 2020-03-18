@@ -53,6 +53,18 @@ public class PersonDTO {
         }
     }
 
+    public PersonDTO(Person person, HobbyDTOList hobbies, PhoneDTOList phones){
+        this.id = person.getId();
+        this.firstName = person.getFirstName();
+        this.lastName = person.getLastName();
+        this.email = person.getEmail();
+        this.hobbies = hobbies;
+        this.phones = phones;
+        if (person.getAddress() != null) {
+            this.address = new AddressDTO(person.getAddress());
+        }
+    }
+
     public Integer getId() {
         return id;
     }

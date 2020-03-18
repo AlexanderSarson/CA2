@@ -45,11 +45,11 @@ public class Phone implements Serializable {
         this.description = dto.getDescription();
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -83,6 +83,7 @@ public class Phone implements Serializable {
         if(obj.getClass() != this.getClass()) return false;
         else {
             Phone other = (Phone)obj;
+            if(other.getId() == null || this.id == null) return false;
             return other.getId() == this.id;
         }
     }

@@ -11,9 +11,11 @@ public class PhoneDTOList {
     public PhoneDTOList() {}
 
     public PhoneDTOList(List<Phone> phones) {
-        phones.forEach(phone -> {
-            phoneList.add(new PhoneDTO(phone));
-        });
+        List<PhoneDTO> dtos = new ArrayList<>();
+        for(Phone phone: phones) {
+            dtos.add(new PhoneDTO(phone.getId(),phone.getNumber(),phone.getDescription()));
+        }
+        this.phoneList = dtos;
     }
 
     public List<Phone> convertToPhoneList() {

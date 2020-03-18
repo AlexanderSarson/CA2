@@ -5,7 +5,9 @@ package facades;
  * version 1.0
  */
 
+import dto.HobbyDTOList;
 import dto.PersonDTO;
+import dto.PhoneDTOList;
 import entities.Person;
 import entities.Phone;
 import exception.MissingInputException;
