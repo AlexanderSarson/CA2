@@ -1,27 +1,40 @@
 import dto.HobbyDTO;
 import dto.PersonDTO;
+import dto.PhoneDTO;
 import entities.*;
 import exception.MissingInputException;
 import facades.HobbyFacade;
 import facades.PersonFacade;
+import facades.PhoneFacade;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 public class Tester {
+
+    public static void testDuplicateHobby(EntityManagerFactory entityManagerFactory) throws MissingInputException {
+        HobbyFacade hobbyFacade = HobbyFacade.getHobbyFacade(entityManagerFactory);
+        PhoneFacade phoneFacade = PhoneFacade.getPhoneFacade(entityManagerFactory);
+
+        Hobby hobby = new Hobby("Chess", "We play chess");
+        hobbyFacade.create(new HobbyDTO(hobby));
+
+        Phone phone = new Phone("11111111", "Work");
+        phoneFacade.create(new PhoneDTO(phone));
+    }
+
     public static void main(String[] args) throws MissingInputException {
         EntityManagerFactory entityManagerFactory = EMF_Creator.createEntityManagerFactory(
                 EMF_Creator.DbSelector.DEV,
                 EMF_Creator.Strategy.DROP_AND_CREATE);
 
-        /* This will not work, currently, as we are trying to persist the same hobby again later
-        // Make sure this will work!
-        HobbyFacade hobbyFacade = HobbyFacade.getHobbyFacade(entityManagerFactory);
-        Hobby hobby = new Hobby("Chess", "We play chess");
-        hobbyFacade.create(new HobbyDTO(hobby));
-        */
 
+        // SETUP PRE-RUN TEST CASES
+        testDuplicateHobby(entityManagerFactory);
+
+
+        // The following will create a Person with all relations attached
         Person person = new Person("Peter", "Nielsen", "pNielsen@gmail.com");
 
         Hobby h1 = new Hobby("Chess","We play chess");
@@ -42,11 +55,7 @@ public class Tester {
 
         person.setAddress(address);
 
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        entityManager.persist(cityInfo);
-        entityManager.persist(person);
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        PersonFacade personFacade = PersonFacade.getPersonFacade(entityManagerFactory);
+        personFacade.create(new PersonDTO(person));
     }
 }

@@ -5,16 +5,13 @@ package facades;
  * version 1.0
  */
 
-import dto.HobbyDTOList;
 import dto.PersonDTO;
-import dto.PhoneDTOList;
-import entities.Person;
-import entities.Phone;
+import entities.*;
 import exception.MissingInputException;
 import exception.PersonNotFoundException;
+import utils.PersistenceChecker;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatException;
 import java.util.List;
 import javax.persistence.*;
 
@@ -107,19 +104,28 @@ public class PersonFacade {
      * @return The persisted person, but with its ID assigned.
      */
     public PersonDTO create(PersonDTO personDTO) throws MissingInputException {
-        EntityManager em = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         Person person = new Person(personDTO);
         try {
-            em.getTransaction().begin();
-            em.persist(person);
-            em.getTransaction().commit();
+            entityManager.getTransaction().begin();
+            preCreateCheck(entityManager, person);
+            entityManager.persist(person);
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
             throw new MissingInputException(MissingInputException.DEFAULT_PERSON_MESSAGE);
         } finally {
-            em.close();
+            entityManager.close();
         }
         personDTO.setId(person.getId());
         return personDTO;
+    }
+
+    private void preCreateCheck(EntityManager entityManager, Person person) {
+        List<Hobby> hobbiesToBeAdded = PersistenceChecker.filterDuplicateHobbies(entityManager, person);
+        person.setHobbies(hobbiesToBeAdded);
+
+        List<Phone> phonesToBeAdded = PersistenceChecker.filterDuplicatePhones(entityManager, person);
+        person.setPhones(phonesToBeAdded);
     }
 
     public PersonDTO deletePerson(int id) throws PersonNotFoundException {
@@ -223,5 +229,4 @@ public class PersonFacade {
         });
         return dtos;
     }
-
 }

@@ -98,7 +98,8 @@ public class PhoneFacade {
         phoneDTO.setId(phone.getId());
         return phoneDTO;
     }
- public PhoneDTO updatePhone (PhoneDTO phoneDTO) throws PhoneNotFoundException, MissingInputException {
+
+    public PhoneDTO updatePhone (PhoneDTO phoneDTO) throws PhoneNotFoundException, MissingInputException {
         EntityManager em = entityManagerFactory.createEntityManager();
         try {
             Phone phone = em.find(Phone.class, phoneDTO.getId());
@@ -137,4 +138,7 @@ public class PhoneFacade {
             em.close();
         }
     }
+
+
+
 }
