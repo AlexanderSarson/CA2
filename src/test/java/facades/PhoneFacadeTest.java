@@ -112,8 +112,6 @@ public class PhoneFacadeTest {
     }
     
     @Test public void testUpdatePhone_with_missing_input(){
-        //Af en eller anden årsag, fejler denne test hvis vi udskifter linje 117 med linje 116..? 
-        //pd1.setDescription(null);
         pd1.setNumber(null);
         assertThrows(MissingInputException.class, () -> {
             phoneFacade.updatePhone(pd1);

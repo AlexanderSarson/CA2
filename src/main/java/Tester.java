@@ -1,8 +1,10 @@
+import dto.AddressDTO;
 import dto.HobbyDTO;
 import dto.PersonDTO;
 import dto.PhoneDTO;
 import entities.*;
 import exception.MissingInputException;
+import facades.AddressFacade;
 import facades.HobbyFacade;
 import facades.PersonFacade;
 import facades.PhoneFacade;
@@ -16,12 +18,19 @@ public class Tester {
     public static void testDuplicateHobby(EntityManagerFactory entityManagerFactory) throws MissingInputException {
         HobbyFacade hobbyFacade = HobbyFacade.getHobbyFacade(entityManagerFactory);
         PhoneFacade phoneFacade = PhoneFacade.getPhoneFacade(entityManagerFactory);
+        AddressFacade addressFacade = AddressFacade.getAddressFacade(entityManagerFactory);
 
         Hobby hobby = new Hobby("Chess", "We play chess");
         hobbyFacade.create(new HobbyDTO(hobby));
 
         Phone phone = new Phone("11111111", "Work");
         phoneFacade.create(new PhoneDTO(phone));
+
+        CityInfo cityInfo = new CityInfo(2000,"Test");
+        Address address = new Address("Langgade", "Extra");
+        address.setCityInfo(cityInfo);
+
+        addressFacade.create(new AddressDTO(address));
     }
 
     public static void main(String[] args) throws MissingInputException {
