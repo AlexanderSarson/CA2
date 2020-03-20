@@ -88,6 +88,11 @@ public class Phone implements Serializable {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public static boolean isValidDanishNumber(String input) {
         return isValidPhoneNumber(input,8);
     }

@@ -9,7 +9,6 @@ import dto.PersonDTO;
 import entities.*;
 import exception.MissingInputException;
 import exception.PersonNotFoundException;
-import utils.PersistenceChecker;
 
 import java.util.ArrayList;
 import java.util.List;

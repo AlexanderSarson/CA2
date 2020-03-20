@@ -81,4 +81,9 @@ public class AddressDTO {
             return this.id.equals(other.getId());
         }
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

@@ -78,4 +78,9 @@ public class HobbyDTO {
             return other.getId().equals(this.id);
         }
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

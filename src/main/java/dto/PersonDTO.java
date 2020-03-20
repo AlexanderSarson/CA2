@@ -128,6 +128,11 @@ public class PersonDTO {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public void addHobby(HobbyDTO h1) {
         hobbies.add(h1);
     }

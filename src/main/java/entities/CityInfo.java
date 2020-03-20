@@ -96,4 +96,9 @@ public class CityInfo implements Serializable {
             return other.getId().equals(this.id);
         }
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

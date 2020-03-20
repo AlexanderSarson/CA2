@@ -158,6 +158,11 @@ public class Person implements Serializable {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public void setHobbies(List<Hobby> hobbies) {
         this.hobbies = hobbies;
     }

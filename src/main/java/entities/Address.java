@@ -109,4 +109,9 @@ public class Address implements Serializable {
             return other.getId() == this.id;
         }
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
