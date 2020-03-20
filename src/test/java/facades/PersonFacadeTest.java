@@ -5,6 +5,8 @@ package facades;
  */
 
 import dto.PersonDTO;
+import entities.Address;
+import entities.CityInfo;
 import entities.Person;
 import entities.Phone;
 import exception.MissingInputException;
@@ -101,8 +103,10 @@ public class PersonFacadeTest {
     @Test
     public void testCreatePerson_with_valid_input() throws MissingInputException {
         Person p3 = new Person("Benny", "Hill", "bHill@outlook.com");
+        Address address = new Address("street1","add");
+        address.setCityInfo(new CityInfo(2000,"valby"));
+        p3.setAddress(address);
         PersonDTO result = personFacade.create(new PersonDTO(p3));
-        // NOTE(Benjamin): This ID must be calculated during runtime, else we have no idea what it will be.
         Integer nextId = Math.max(p1.getId(),p2.getId()) + 1;
         assertEquals(nextId, result.getId());
     }

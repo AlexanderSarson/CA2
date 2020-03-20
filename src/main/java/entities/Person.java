@@ -40,7 +40,7 @@ public class Person implements Serializable {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(
             name = "PersonHobby",
             joinColumns = {
@@ -115,7 +115,9 @@ public class Person implements Serializable {
 
     public void setAddress(Address address) {
         this.address = address;
-        address.addPerson(this);
+        if(address != null) {
+            address.addPerson(this);
+        }
     }
 
     public void addHobby(Hobby hobby) {
@@ -154,5 +156,13 @@ public class Person implements Serializable {
             }
             return other.getId().equals(this.id);
         }
+    }
+
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 }

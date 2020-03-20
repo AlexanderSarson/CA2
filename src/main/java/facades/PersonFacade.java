@@ -5,16 +5,13 @@ package facades;
  * version 1.0
  */
 
-import dto.HobbyDTOList;
 import dto.PersonDTO;
-import dto.PhoneDTOList;
-import entities.Person;
-import entities.Phone;
+import entities.*;
 import exception.MissingInputException;
 import exception.PersonNotFoundException;
+import utils.PersistenceChecker;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatException;
 import java.util.List;
 import javax.persistence.*;
 
@@ -107,19 +104,81 @@ public class PersonFacade {
      * @return The persisted person, but with its ID assigned.
      */
     public PersonDTO create(PersonDTO personDTO) throws MissingInputException {
-        EntityManager em = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         Person person = new Person(personDTO);
         try {
-            em.getTransaction().begin();
-            em.persist(person);
-            em.getTransaction().commit();
+            entityManager.getTransaction().begin();
+            preCreateCheck(entityManager,person);
+            entityManager.persist(person);
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
             throw new MissingInputException(MissingInputException.DEFAULT_PERSON_MESSAGE);
         } finally {
-            em.close();
+            entityManager.close();
         }
-        personDTO.setId(person.getId());
-        return personDTO;
+        return new PersonDTO(person);
+    }
+
+    private void preCreateCheck(EntityManager entityManager, Person person) {
+        List<Hobby> completeHobbyList = new ArrayList<>();
+        person.getHobbies().forEach(hobby -> {
+            try {
+                Hobby found = entityManager.createNamedQuery("Hobby.findByName", Hobby.class)
+                        .setParameter("name",hobby.getName())
+                        .getSingleResult();
+                completeHobbyList.add(found);
+            } catch(NoResultException e) {
+                entityManager.persist(hobby);
+                completeHobbyList.add(hobby);
+            }
+        });
+        person.setHobbies(completeHobbyList);
+
+        List<Phone> completePhoneList = new ArrayList<>();
+        person.getPhones().forEach(phone -> {
+           try {
+               Phone found = entityManager.createNamedQuery("Phone.getByNumber", Phone.class)
+                       .setParameter("number", phone.getNumber())
+                       .getSingleResult();
+               completePhoneList.add(found);
+           } catch (NoResultException e) {
+               entityManager.persist(phone);
+               completePhoneList.add(phone);
+           }
+        });
+        person.setPhones(completePhoneList);
+
+        // Check the CityInfo first
+        CityInfo cityInfo = person.getAddress().getCityInfo();
+        CityInfo foundCityInfo = null;
+        try {
+            foundCityInfo = entityManager.createNamedQuery("CityInfo.getByZipCode", CityInfo.class)
+                    .setParameter("zipCode",cityInfo.getZipCode())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            entityManager.persist(cityInfo);
+            foundCityInfo = cityInfo;
+        }
+        entityManager.getTransaction().commit();
+        Address address = person.getAddress();
+        address.setCityInfo(foundCityInfo);
+        entityManager.getTransaction().begin();
+        Address foundAddress = null;
+        try {
+            List<Address> multipleFound  = entityManager.createNamedQuery("Address.getByStreetAndCityInfoId", Address.class)
+                    .setParameter("street",address.getStreet())
+                    .setParameter("id",foundCityInfo.getId()).getResultList();
+            if(multipleFound == null || multipleFound.isEmpty()) {
+                entityManager.persist(address);
+            } else {
+                foundAddress = multipleFound.get(0);
+            }
+        } catch (NoResultException e) {
+            entityManager.persist(address);
+            foundAddress = address;
+        }
+        person.setAddress(foundAddress);
+        person.getAddress().setCityInfo(foundCityInfo);
     }
 
     public PersonDTO deletePerson(int id) throws PersonNotFoundException {
@@ -233,5 +292,4 @@ public class PersonFacade {
         });
         return dtos;
     }
-
 }

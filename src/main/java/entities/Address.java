@@ -17,7 +17,9 @@ import javax.persistence.*;
 @NamedQueries({
     @NamedQuery(name = "Address.deleteAllRows", query = "DELETE FROM Address"),
     @NamedQuery(name = "Address.getAll", query = "SELECT a FROM Address a"),
-    @NamedQuery(name = "Address.getByStreet", query = "SELECT a FROM Address a WHERE a.street LIKE :street"),})
+    @NamedQuery(name = "Address.getByStreet", query = "SELECT a FROM Address a WHERE a.street LIKE :street"),
+    @NamedQuery(name = "Address.getByStreetAndCityInfoId", query = "SELECT a FROM Address a WHERE a.street = :street AND a.cityInfo.id = :id"),
+})
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;

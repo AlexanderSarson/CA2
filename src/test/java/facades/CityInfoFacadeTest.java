@@ -47,6 +47,7 @@ public class CityInfoFacadeTest {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
+            entityManager.createNamedQuery("Address.deleteAllRows").executeUpdate();
             entityManager.createNamedQuery("CityInfo.deleteAllRows").executeUpdate();
             entityManager.persist(c1);
             entityManager.persist(c2);
