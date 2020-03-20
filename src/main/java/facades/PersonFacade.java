@@ -161,18 +161,14 @@ public class PersonFacade {
         }
         entityManager.getTransaction().commit();
         Address address = person.getAddress();
-        address.setCityInfo(foundCityInfo);
+        address.setCityInfo(null);
         entityManager.getTransaction().begin();
         Address foundAddress = null;
         try {
-            List<Address> multipleFound  = entityManager.createNamedQuery("Address.getByStreetAndCityInfoId", Address.class)
+            foundAddress = entityManager.createNamedQuery("Address.getByStreetAndCityInfoId", Address.class)
                     .setParameter("street",address.getStreet())
-                    .setParameter("id",foundCityInfo.getId()).getResultList();
-            if(multipleFound == null || multipleFound.isEmpty()) {
-                entityManager.persist(address);
-            } else {
-                foundAddress = multipleFound.get(0);
-            }
+                    .setParameter("id",foundCityInfo.getId())
+                    .getSingleResult();
         } catch (NoResultException e) {
             entityManager.persist(address);
             foundAddress = address;
