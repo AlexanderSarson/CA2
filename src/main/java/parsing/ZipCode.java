@@ -112,10 +112,16 @@ public class ZipCode {
         this.kommuner = kommuner;
     }
 
-    public static List<String> convertToZipCodeList(List<ZipCode> zipCodeList){
+    public static List<String> convertToZipCodeList(List<ZipCode> zipCodeList) {
         List<String> zipcodes = new ArrayList<>();
         zipCodeList.forEach(zipcode -> zipcodes.add(zipcode.getNr()));
         return zipcodes;
     }
-    
+
+    public static List<ZipCity> convertToZipCodeListWithCityName(List<ZipCode> zipCodeList) {
+        List<ZipCity> zipcodes = new ArrayList<>();
+        zipCodeList.forEach(zipcode -> zipcodes.add(new ZipCity(zipcode)));
+        return zipcodes;
+    }
+
 }

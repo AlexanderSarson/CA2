@@ -36,6 +36,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import parsing.ZipCity;
 import parsing.ZipCode;
 import rest.deserializationsettings.AnnotationExclusionStrategy;
 
@@ -159,7 +160,7 @@ public class PersonResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<String> getAllZipCodes() throws MalformedURLException, ProtocolException, IOException {
+    public List<ZipCity> getAllZipCodes() throws MalformedURLException, ProtocolException, IOException {
         URL url = new URL("https://dawa.aws.dk/postnumre");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -179,7 +180,7 @@ public class PersonResource {
         }
         List<ZipCode> zipCodes = GSON.fromJson(content.toString(), new TypeToken<List<ZipCode>>() {
         }.getType());
-        return ZipCode.convertToZipCodeList(zipCodes);
+        return ZipCode.convertToZipCodeListWithCityName(zipCodes);
     }
 
     @Operation(summary = "Get the count of people with a given hobby",
