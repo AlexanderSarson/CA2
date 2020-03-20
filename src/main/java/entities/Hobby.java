@@ -9,6 +9,7 @@ import dto.HobbyDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 
 
@@ -90,5 +91,10 @@ public class Hobby implements Serializable {
             if(this.id == null || other.getId() == null) return false;
             return other.getId().equals(this.id);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, persons);
     }
 }

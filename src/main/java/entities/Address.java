@@ -10,6 +10,7 @@ import dto.AddressDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 
 @Entity
@@ -108,5 +109,10 @@ public class Address implements Serializable {
             Address other = (Address) obj;
             return other.getId() == this.id;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, street, additionalInfo, cityInfo, persons);
     }
 }

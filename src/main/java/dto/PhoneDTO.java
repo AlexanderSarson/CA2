@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Schema(name = "Phone")
 public class PhoneDTO {
@@ -75,5 +76,10 @@ public class PhoneDTO {
             if(id == null || other.getId() == null) return false;
             return other.getId().equals(this.id);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, description);
     }
 }

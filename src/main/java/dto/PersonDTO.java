@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -126,6 +127,11 @@ public class PersonDTO {
             }
             return this.id.equals(other.getId());
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, firstName, lastName, hobbies, phones, address);
     }
 
     public void addHobby(HobbyDTO h1) {

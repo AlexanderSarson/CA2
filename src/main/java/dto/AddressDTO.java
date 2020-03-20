@@ -4,6 +4,8 @@ import entities.Address;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.Objects;
+
 /**
  * @author paepke
  * @version 1.0
@@ -80,5 +82,10 @@ public class AddressDTO {
             if(id == null || other.getId() == null) return false;
             return this.id.equals(other.getId());
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, street, additionalInfo, cityInfo);
     }
 }

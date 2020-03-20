@@ -7,6 +7,7 @@ package entities;
 import dto.PhoneDTO;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.*;
 
 
@@ -86,6 +87,11 @@ public class Phone implements Serializable {
             if(other.getId() == null || this.id == null) return false;
             return other.getId() == this.id;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, description, owner);
     }
 
     public static boolean isValidDanishNumber(String input) {

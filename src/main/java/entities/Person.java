@@ -12,6 +12,7 @@ import dto.PhoneDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 
 @Entity
@@ -156,6 +157,11 @@ public class Person implements Serializable {
             }
             return other.getId().equals(this.id);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, hobbies, phones, address);
     }
 
     public void setHobbies(List<Hobby> hobbies) {
