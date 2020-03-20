@@ -283,9 +283,9 @@ public class PersonFacade {
      */
     private List<PersonDTO> toPersonDTOList(List<Person> persons) {
         List<PersonDTO> dtos = new ArrayList<>();
-        persons.forEach(person -> {
+        for(Person person: persons) {
             dtos.add(new PersonDTO(person));
-        });
+        }
         return dtos;
     }
 }

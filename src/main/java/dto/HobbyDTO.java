@@ -56,7 +56,9 @@ public class HobbyDTO {
 
     public static List<HobbyDTO> convertToHobbyDTO(List<Hobby> hobbies){
         List<HobbyDTO> hobbyDTOList = new ArrayList<>();
-        hobbies.forEach(hobby -> hobbyDTOList.add(new HobbyDTO(hobby)));
+        for(Hobby hobby: hobbies) {
+            hobbyDTOList.add(new HobbyDTO(hobby));
+        }
         return hobbyDTOList;
     }
     
